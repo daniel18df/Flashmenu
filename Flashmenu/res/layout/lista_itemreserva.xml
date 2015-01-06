@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical" >
+
+        <TextView
+            android:id="@+id/text_fecha"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/text_hota"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:text="CheckBox"
+            android:textColor="#ffffff"
+            android:textSize="17dip"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/textView1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/text_hota"
+            android:layout_alignParentLeft="true"
+            android:text="Fecha: " 
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/text_hota"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/text_fecha"
+            android:layout_marginLeft="29dp"
+            android:layout_toRightOf="@+id/textView1"
+            android:paddingLeft="6dip"
+            android:paddingTop="6dip"
+            android:textColor="#FFFFFF"
+            android:textSize="17dip"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/text_id"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/text_hota"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/text_hota"
+            android:textStyle="bold" 
+            android:textColor="#FFFFFF" />
+
+        <TextView
+            android:id="@+id/id_reserva"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@+id/text_hota"
+            android:text="Id Reserva: " 
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:text="Hora: "
+            android:textStyle="bold"  />
+
+</RelativeLayout>

@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical" >
+
+    <TextView
+        android:id="@+id/cantidad_personas"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/numero_mesa"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/numero_mesa"
+        android:text="CheckBox"
+        android:textColor="#ffffff"
+        android:textSize="15sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/descripcion_mesa"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/cantidad_personas"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/cantidad_personas"
+        android:text="CheckBox"
+        android:textColor="#ffffff"
+        android:textSize="15sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/textView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="25dp"
+        android:text="Numero de mesa: "
+        android:textSize="15sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/descripcion_mesa"
+        android:layout_alignBottom="@+id/descripcion_mesa"
+        android:layout_alignLeft="@+id/textView2"
+        android:text="Descripcion: "
+        android:textSize="15sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/cantidad_personas"
+        android:layout_alignLeft="@+id/textView1"
+        android:text="Cantidad de personas: "
+        android:textSize="15sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/numero_mesa"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/textView1"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="32dp"
+        android:layout_toRightOf="@+id/textView2"
+        android:textColor="#ffffff"
+        android:textSize="15sp"
+        android:textStyle="bold" />
+
+</RelativeLayout>

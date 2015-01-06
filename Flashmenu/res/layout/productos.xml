@@ -1,0 +1,314 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg"
+    android:gravity="center_horizontal"
+    android:orientation="vertical"
+    tools:context="cl.flashmenu.aplicacion.Productos" >
+    
+    <RelativeLayout
+        android:id="@+id/relativeLayout4"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:orientation="vertical" >
+
+        <TextView
+            android:id="@+id/perfilSelectMenu"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:background="@drawable/perfil"
+            android:textAppearance="?android:attr/textAppearanceSmall" />
+
+        <TextView
+            android:id="@+id/nombreClienteSelectMenu"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@+id/perfilSelectMenu"
+            android:text="Usuario"
+            android:textColor="#FFFFFF" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.01" >
+
+        <TextView
+            android:id="@+id/titulolista"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:text="Seleccione su menú"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textColor="#ffffff"
+            android:textSize="30sp"
+            android:textStyle="bold" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/relativeLayout1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.01" >
+
+        <TextView
+            android:id="@+id/cantidadPlatos"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@+id/textView10"
+            android:layout_alignBottom="@+id/textView10"
+            android:layout_alignLeft="@+id/totalProductosPlato"
+            android:text="000"
+            android:textColor="#ffffff" />
+
+        <TextView
+            android:id="@+id/textView4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/platos"
+            android:layout_below="@+id/platos"
+            android:text="Total: " />
+
+        <TextView
+            android:id="@+id/textView10"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/textView4"
+            android:layout_below="@+id/textView4"
+            android:text="Cantidad: " />
+
+        <TextView
+            android:id="@+id/totalProductosPlato"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/platos"
+            android:layout_toRightOf="@+id/textView10"
+            android:text="0000"
+            android:textColor="#ffffff" />
+
+        <TextView
+            android:id="@+id/textView5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/bebidas"
+            android:layout_below="@+id/platos"
+            android:text="Total: " />
+
+        <TextView
+            android:id="@+id/textView11"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@+id/cantidadPlatos"
+            android:layout_alignBottom="@+id/cantidadPlatos"
+            android:layout_alignLeft="@+id/textView5"
+            android:text="Cantidad: " />
+
+        <TextView
+            android:id="@+id/cantidadBebidas"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/totalProductosBebidas"
+            android:layout_toRightOf="@+id/textView11"
+            android:text="0000"
+            android:textColor="#ffffff" />
+
+        <TextView
+            android:id="@+id/totalProductosBebidas"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/textView11"
+            android:layout_toRightOf="@+id/textView11"
+            android:text="0000"
+            android:textColor="#ffffff" />
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginRight="65dp"
+            android:text="Bebestibles"
+            android:textColor="#ffffff"
+            android:textStyle="bold" />
+
+        <Button
+            android:id="@+id/bebidas"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@+id/platos"
+            android:layout_alignBottom="@+id/platos"
+            android:layout_alignLeft="@+id/textView2"
+            android:background="@drawable/bebidas"
+            android:textColor="#FFFFFF"
+            android:textSize="25sp" />
+
+        <Button
+            android:id="@+id/platos"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@+id/textView1"
+            android:layout_marginLeft="35dp"
+            android:background="@drawable/plato"
+            android:textColor="#FFFFFF"
+            android:textSize="25sp" />
+
+        <TextView
+            android:id="@+id/textView1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_alignRight="@+id/textView10"
+            android:text="Platos"
+            android:textColor="#ffffff"
+            android:textStyle="bold" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/relativeLayout3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/view1"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/relativeLayout2"
+        android:layout_weight="0.03" >
+
+        <TextView
+            android:id="@+id/textView3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_alignRight="@+id/postres"
+            android:layout_marginRight="17dp"
+            android:text="Postres"
+            android:textColor="#ffffff"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/cantidadPostres"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@+id/textView12"
+            android:layout_alignBottom="@+id/textView12"
+            android:layout_alignLeft="@+id/totalProductosPostres"
+            android:text="0000"
+            android:textColor="#ffffff" />
+
+        <TextView
+            android:id="@+id/totalProductosPostres"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@+id/nuevo12332asas"
+            android:layout_alignBottom="@+id/nuevo12332asas"
+            android:layout_toRightOf="@+id/textView12"
+            android:text="0000"
+            android:textColor="#ffffff" />
+
+        <TextView
+            android:id="@+id/textView12"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/nuevo12332asas"
+            android:layout_below="@+id/postres"
+            android:layout_marginTop="18dp"
+            android:text="Cantidad: " />
+
+        <TextView
+            android:id="@+id/nuevo12332asas"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/postres"
+            android:layout_below="@+id/postres"
+            android:text="Total: " />
+
+        <TextView
+            android:id="@+id/textView3asd"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/postres"
+            android:layout_alignLeft="@+id/menu"
+            android:layout_marginLeft="17dp"
+            android:text="Menús"
+            android:textColor="#ffffff"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/nuevo2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@+id/totalProductosPostres"
+            android:layout_alignBottom="@+id/totalProductosPostres"
+            android:layout_alignLeft="@+id/menu"
+            android:text="Total: " />
+
+        <TextView
+            android:id="@+id/textView122"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@+id/cantidadPostres"
+            android:layout_alignBottom="@+id/cantidadPostres"
+            android:layout_alignLeft="@+id/nuevo2"
+            android:text="Cantidad: " />
+
+        <TextView
+            android:id="@+id/totalProductosMenu"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/menu"
+            android:layout_toRightOf="@+id/textView122"
+            android:text="0000"
+            android:textColor="#ffffff" />
+
+        <TextView
+            android:id="@+id/cantidadProductosMenu"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@+id/textView122"
+            android:layout_alignBottom="@+id/textView122"
+            android:layout_toRightOf="@+id/textView122"
+            android:text="0000"
+            android:textColor="#ffffff" />
+
+        <Button
+            android:id="@+id/postres"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@+id/textView3"
+            android:layout_marginLeft="36dp"
+            android:background="@drawable/postre"
+            android:textColor="#FFFFFF"
+            android:textSize="25sp" />
+
+        <Button
+            android:id="@+id/menu"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/nuevo2"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="48dp"
+            android:background="@drawable/menu2" />
+
+    </RelativeLayout>
+
+    <Button
+        android:id="@+id/botonProductos"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#0DC03D"
+        android:text="Siguiente"
+        android:textColor="#FFFFFF"
+        android:textSize="25sp" />
+
+</LinearLayout>

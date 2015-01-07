@@ -4,6 +4,7 @@ package cliente;
 import reserva.VerReserva;
 import cl.flashmenu.aplicacion.MainActivity;
 import cl.flashmenu.aplicacion.R;
+import cl.flashmenu.aplicacion.preferencia;
 import cl.flashmenu.aplicacion.verMapa;
 import android.app.Activity;
 import android.content.Intent;
@@ -16,7 +17,7 @@ import android.widget.Button;
 
 public class perfilCliente extends Activity {
 
-	Button  modificarCli, verReservas, volverMapa, cerrarSesion;
+	Button  modificarCli, verReservas, volverMapa, cerrarSesion, preferencias;
 	String usuario, idCliente;
 	
 	@Override
@@ -92,6 +93,19 @@ public class perfilCliente extends Activity {
 			public void onClick(View v) {
 				
 				Intent i = new Intent(getApplicationContext(), MainActivity.class);
+				startActivity(i);
+
+				//finish();
+			}
+		});
+		
+		preferencias = (Button) findViewById(R.id.preferencias);
+		preferencias.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				
+				Intent i = new Intent(getApplicationContext(), preferencia.class);
 				startActivity(i);
 
 				//finish();

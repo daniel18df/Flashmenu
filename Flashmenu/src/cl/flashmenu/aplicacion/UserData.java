@@ -23,6 +23,10 @@ public class UserData {
 	public static HashMap<String, Float> ratings;
 	public static int tipo;
 	public static String url_actual;
+
+	public static String preferenciaComida;
+	public static String preferenciaPrecio;
+	public static String preferenciaDistancia;
 	
 	
 	public static int CountPlatos(){

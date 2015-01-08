@@ -381,7 +381,7 @@ public class listaPlatos2 extends ListActivity{
 					 * */
 					WeatherDataListAdapter adapter = new WeatherDataListAdapter(
 							listaPlatos2.this, PlatosList, R.layout.list_itemplatos,
-							new String[] { TAG_NOMBRE, TAG_DESCRIPCION, TAG_PRECIO, TAG_CANTIDAD}, new int[] {R.id.nombrePlato, R.id.descripcionPlato, R.id.precioPlato, R.id.cantidadPlatosSeleccionados});
+							new String[] { TAG_NOMBRE, TAG_DESCRIPCION, TAG_PRECIO, TAG_CANTIDAD}, new int[] {R.id.nombrePlato, R.id.descripcionPlato, R.id.precioPlato, R.id.cantidadPlatosSeleccionados}, "platos");
 
 					//new String[] { TAG_NOMBRE, TAG_DESCRIPCION, TAG_PRECIO,TAG_SPINNER }, new int[] {R.id.nombrePlato, R.id.descripcionPlato, R.id.precioPlato, R.id.spinnerPlato});
 

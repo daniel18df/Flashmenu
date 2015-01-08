@@ -14,22 +14,30 @@ import cliente.perfilCliente;
 
 import android.app.ListActivity;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.SimpleAdapter;
+import android.widget.TextView;
 import android.widget.AdapterView.OnItemClickListener;
 
 
 public class preferencia extends ListActivity {
 	
 	
-	String valorPreferencia;
+	String valorPreferencia, n;
+	
+
+	private int tipo = 0;
 	
 	// Creating JSON Parser object
 	JSONParser jParser = new JSONParser();
@@ -43,16 +51,20 @@ public class preferencia extends ListActivity {
 	
 	// JSON Node names
 	private static final String TAG_SUCCESS = "success";
-	private static final String TAG_Preferencia = "Preferencia_tipo";
-	private static final String TAG_PREFERENCIA_TIPO_NOMBRE = "Preferencia_tipo_nombre";
-	private static final String TAG_PREFERENCIA_TIPO_VALOR = "Preferencia_tipo_valor";
+	public static final String TAG_Preferencia = "Preferencia_tipo";
+	public static final String TAG_PREFERENCIA_TIPO_NOMBRE = "Preferencia_tipo_nombre";
+	public static final String TAG_PREFERENCIA_TIPO_VALOR = "Preferencia_tipo_valor";
 
-
-
+	
+	
+	LinearLayout[] Linear = new LinearLayout[3];
+	
 
 	// JSONArray
-	JSONArray horariosl = null;
+	JSONArray[] horariosl = new JSONArray[3];
 
+	
+	
 	// Progress Dialog
 	private ProgressDialog pDialog;
 
@@ -69,20 +81,45 @@ public class preferencia extends ListActivity {
 		
 		// Hashmap for ListView
 		horariosList = new ArrayList<HashMap<String, String>>();
+		
+		
+		
+		Linear[0] = (LinearLayout) findViewById(R.id.linearLayoutPreferencias1);
+		Linear[1] = (LinearLayout) findViewById(R.id.linearLayoutPreferencias2);
+		Linear[2] = (LinearLayout) findViewById(R.id.linearLayoutPreferencias3);
+		
+		
+		
+		
+		
 
 		// Get listview
-		ListView lv = getListView();
-
+		for(int i = 0; i<3; i++){
+		ListView lv = (ListView)Linear[i].getChildAt(1);
+        
 		lv.setOnItemClickListener(new OnItemClickListener() {
 
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
+				
+				
+				HashMap<String, Object> elemento = (HashMap<String, Object>)getListAdapter().getItem(position);
+				RelativeLayout textView = (RelativeLayout)getListAdapter().getView(position, view, parent);
 
-			}
+
+				n = (String)elemento.get(TAG_PREFERENCIA_TIPO_VALOR);
+				
+				HashMap<String, Object> map = new HashMap<String, Object>();
+				map.put(TAG_PREFERENCIA_TIPO_VALOR, n);
+				map.put(UserData.TAG_TIPO, tipo);
+					
+				((TextView)view.findViewById(R.id.nombrePlato)).setTextColor(Color.BLACK);
+
+				}
 		});
 	}
-	
+	}
 	
 	
 	/**
@@ -106,14 +143,12 @@ public class preferencia extends ListActivity {
 		/**
 		 * getting All platos from url
 		 * */
-		protected String doInBackground(String... args) {
+		public void llenarLista(String url, int index){
 			// Building Parameters
-			List<NameValuePair> params = new ArrayList<NameValuePair>();
-
-			// getting JSON string from URL
-			JSONObject json = jParser.makeHttpRequest(url_Lista_tipo_comidas, "POST", params);
+						List<NameValuePair> params = new ArrayList<NameValuePair>();
 			
-
+			JSONObject json = jParser.makeHttpRequest(url, "POST", params);
+		
 			// Check your log cat for JSON reponse
 			Log.d("All platos: ", json.toString());
 
@@ -123,22 +158,8 @@ public class preferencia extends ListActivity {
 
 				if (success == 1) {
 
-					horariosl = json.getJSONArray(TAG_Preferencia);
+					horariosl[index] = json.getJSONArray(TAG_Preferencia);
 
-					for (int i = 0; i < horariosl.length(); i++) {
-						JSONObject c = horariosl.getJSONObject(i);
-
-						valorPreferencia = c.getString(TAG_PREFERENCIA_TIPO_VALOR);
-
-						// creating new HashMap
-						HashMap<String, String> map = new HashMap<String, String>();
-
-						//	map.put(TAG_FECHA, fecha);
-						map.put(TAG_PREFERENCIA_TIPO_VALOR, valorPreferencia);
-
-						// adding HashList to ArrayList
-						horariosList.add(map);
-					}
 				} else {
 
 					Intent i = new Intent(getApplicationContext(), perfilCliente.class);
@@ -148,6 +169,19 @@ public class preferencia extends ListActivity {
 			} catch (JSONException e) {
 				e.printStackTrace();
 			}
+			
+			
+			
+			}
+		
+		protected String doInBackground(String... args) {
+			
+
+			// getting JSON string from URL
+		llenarLista(url_Lista_tipo_comidas, 0);
+		llenarLista(url_Lista_tipo_distancia, 1);
+		llenarLista(url_Lista_tipo_precio, 2);
+			
 
 			return null;
 		}
@@ -164,22 +198,44 @@ public class preferencia extends ListActivity {
 					/**
 					 * Updating parsed JSON data into ListView
 					 * */
-					ListAdapter adapter = new SimpleAdapter(
-							preferencia.this, horariosList, R.layout.lista_itempreferencias,
-							new String[] { TAG_PREFERENCIA_TIPO_VALOR }, new int[] {R.id.itempreferencia});
-
-					ListAdapter adapter2 = new SimpleAdapter(
-							preferencia.this, horariosList, R.layout.lista_itempreferencias,
-							new String[] { TAG_PREFERENCIA_TIPO_VALOR }, new int[] {R.id.itempreferencia});
+					CopyOfWeatherDataListAdapter[] adapters = new CopyOfWeatherDataListAdapter[3];
 					
-					ListAdapter adapter3 = new SimpleAdapter(
-							preferencia.this, horariosList, R.layout.lista_itempreferencias,
-							new String[] { TAG_PREFERENCIA_TIPO_VALOR }, new int[] {R.id.itempreferencia});
+					for(int j = 0; j<3; j++){
+						horariosList = new ArrayList<>();
 
-					// updating listview
-					setListAdapter(adapter);
-					setListAdapter(adapter2);
-					setListAdapter(adapter3);
+						for (int i = 0; i < horariosl[j].length(); i++) {
+							JSONObject c = null;
+							try {
+								c = horariosl[j].getJSONObject(i);
+							} catch (JSONException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+
+							try {
+								valorPreferencia = c.getString(TAG_PREFERENCIA_TIPO_VALOR);
+							} catch (JSONException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+
+							// creating new HashMap
+							HashMap<String, String> map = new HashMap<String, String>();
+
+							//	map.put(TAG_FECHA, fecha);
+							map.put(TAG_PREFERENCIA_TIPO_VALOR, valorPreferencia);
+
+							// adding HashList to ArrayList
+							horariosList.add(map);
+						}
+						
+						
+						adapters[j] = new CopyOfWeatherDataListAdapter(
+								 preferencia.this, horariosList, R.layout.lista_itempreferencias,
+									new String[] { TAG_PREFERENCIA_TIPO_VALOR }, new int[] {R.id.itempreferencia}, "platos2");
+						((ListView)Linear[j].getChildAt(1)).setAdapter(adapters[j]);
+
+					}
 				}
 			});
 

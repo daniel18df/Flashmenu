@@ -52,6 +52,17 @@
             android:textSize="30sp"
             android:textStyle="bold" />
 
+        <TextView
+            android:id="@+id/titulo_rest"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/titulolista"
+            android:text=""
+            android:textColor="#FFFFFF"
+            android:textSize="17sp" />
+
     </RelativeLayout>
 
     <RelativeLayout

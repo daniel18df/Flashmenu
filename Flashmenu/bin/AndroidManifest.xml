@@ -146,6 +146,10 @@
             android:name=".preferencia"
             android:label="@string/app_name" >
         </activity>
+                 <activity
+            android:name=".verSugerencias"
+            android:label="@string/app_name" >
+        </activity>
 <!-- AIzaSyB63j8GWPO0BPauyPKUWLEpJUKLA9Qzt-o
  AIzaSyA1AtC2u3ti7LbKQw1pFhZ7Wld_LRL5zLM
  AIzaSyBNPke-ZhKdykkDBS2iWFTvKjUhOPSxlmw-->

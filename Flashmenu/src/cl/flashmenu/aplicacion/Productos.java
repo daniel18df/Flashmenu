@@ -22,9 +22,10 @@ public class Productos extends Activity {
 
 	Button platos, bebidas, postres, menu;
 	TextView totalplatos, totalbebidas, totalpostres, totalmenu, cantidadplatos, cantidadbebidas, cantidadpostres, cantidadmenu,
-				perfil, perfilUsuario;
+				perfil, perfilUsuario, titulo_rest;
 	//recibidos por intent
 	String usuario, idRest, mailRest, direccionRest, idCliente, Cliente_email;
+	String nombre_rest;
 
 
 
@@ -44,6 +45,7 @@ public class Productos extends Activity {
 			direccionRest  = extras.getString("direccionRest");
 			idCliente = extras.getString("idCliente");
 			Cliente_email = extras.getString("Cliente_email");
+			nombre_rest = extras.getString("nombre_rest");
 
 		}else{
 			idRest="error";
@@ -52,10 +54,14 @@ public class Productos extends Activity {
 			direccionRest="error";
 			idCliente = "error";
 			Cliente_email = "error";
+			nombre_rest = "error";
 		}///
 
 		perfilUsuario = (TextView) findViewById(R.id.nombreClienteSelectMenu);
 		perfilUsuario.setText(usuario);
+		
+		titulo_rest = (TextView) findViewById(R.id.titulo_rest);
+		titulo_rest.setText(nombre_rest);
 		
 		
 		perfil = (TextView) findViewById(R.id.perfilSelectMenu);

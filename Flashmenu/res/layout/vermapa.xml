@@ -10,7 +10,7 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="cl.flashmenu.aplicacion.verMapa" >
-    
+
     <RelativeLayout
         android:id="@+id/relativeLayout4"
         android:layout_width="match_parent"
@@ -35,14 +35,41 @@
             android:layout_toRightOf="@+id/perfilInfoRestMapa"
             android:text="TextView"
             android:textColor="#FFFFFF" />
-
     </RelativeLayout>
 
-<fragment
-    android:id="@+id/map"
-     android:name="com.google.android.gms.maps.SupportMapFragment"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:layout_below="@+id/relativeLayout4" />
+    <LinearLayout
+        android:id="@+id/linearLayout1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/linearLayout1"
+        android:layout_alignLeft="@+id/relativeLayout4"
+        android:layout_below="@+id/relativeLayout4" >
+
+        <fragment
+            android:id="@+id/map"
+            android:name="com.google.android.gms.maps.SupportMapFragment"
+            android:layout_width="match_parent"
+            android:layout_height="408dp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/linearLayout1"
+        android:layout_alignParentBottom="true"
+        android:layout_alignRight="@+id/linearLayout1"
+        android:layout_below="@+id/linearLayout1"
+        android:orientation="vertical" >
+
+        <Button
+            android:id="@+id/verSugerencia"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+             android:background="#0DC03D"
+            android:text="Ver sugerencias"
+            android:textColor="#FFFFFF"
+            android:textSize="25sp" />
+
+    </LinearLayout>
 
 </RelativeLayout>

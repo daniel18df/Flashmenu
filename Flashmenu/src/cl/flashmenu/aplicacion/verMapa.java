@@ -1,6 +1,7 @@
 package cl.flashmenu.aplicacion;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import org.apache.http.NameValuePair;
@@ -14,9 +15,11 @@ import restaurant.infoRestaurantes;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.location.Location;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
@@ -24,11 +27,17 @@ import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.ListAdapter;
+import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
 
 
+import carta.listaPlatos2;
+import cliente.inicioSesionCliente;
 import cliente.perfilCliente;
 
 
@@ -50,25 +59,60 @@ public class verMapa extends FragmentActivity implements
 GooglePlayServicesClient.ConnectionCallbacks, 
 GooglePlayServicesClient.OnConnectionFailedListener{
 
-
+	// Progress Dialog
+		private ProgressDialog pDialog;
 	// General Variables
 
 	TextView perfilUsuario, perfil;
-
-
-	String usuario, idRest, idCliente, Cliente_email, ic, ce;
+Button versugerencias;
+	HashMap<String, Object> map = new HashMap<String, Object>();
+	String usuario, idRest, idCliente, Cliente_email,Cliente_nombre,Cliente_apellidoPaterno, Cliente_apellidoMaterno, Cliente_direccion, Cliente_rut, ic, ce, tipo_preferencia;
 	//int idRest;
 
 	private static final String TAG_SUCCESS = "success";
+	
+	ArrayList<HashMap<String, Object>> PlatosList;
+	String nombrePro, descripcionPro, precioPro, idPro, tipoPro, tipoPreferenciaPro, restaurant_idrestaurantPro;
 
 	JSONParser jParser = new JSONParser();
 
 	////
 	private static String url_all_inforest = servidor.ip() +servidor.ruta2() + "getCliente.php";
+	private static String url_all_getPreferencias = servidor.ip() +servidor.ruta2() + "getPreferencias.php";
+	private static String url_all_getPreferencias_tipo = servidor.ip() +servidor.ruta2() + "getPreferencias_tipo.php";
+	private static String url_all_infoAllSugerencias = servidor.ip() +servidor.ruta2() + "getSugerencias.php";
+	
 	JSONArray j1 = null;
+	JSONArray j2 = null;
+	
+	//Producto
+	public static final String TAG_NOMBRE_PRODUCTO ="Producto_nombre";
+	public static final String TAG_DESCRIPCION_PRODUCTO = "Producto_descripcion";
+	public static final String TAG_PRECIO_PRODUCTO = "Producto_precio";
+	public static final String TAG_ID_PRODUCTO = "idProducto";
+	public static final String TAG_TIPO_PRODUCTO = "Producto_tipo";
+	public static final String TAG_TIPO_PREFERENCIA = "Producto_tipo_preferencia";
+	public static final String TAG_RESTAURANT_IDRESTAURANT = "Restaurant_idRestaurant";
+	
+	//Cliente
 	private static final String TAG_ID = "idCliente";
 	private static final String TAG_EMAIL = "Cliente_email";
 	private static final String TAG_cliente = "cliente";
+	private static final String TAG_NOMBRE = "Cliente_nombre";
+	private static final String TAG_APELLIDOP = "Cliente_apellidoPaterno";
+	private static final String TAG_APELLIDOM = "Cliente_apellidoMaterno";
+	private static final String TAG_RUT = "Cliente_rut";
+	private static final String TAG_DIRECCION = "Cliente_direccion";
+	
+	//Preferencias
+	private static final String TAG_PREFERENCIAS = "Preferencia";
+	private static final String TAG_TIPO_PREFERENCIAS = "Preferencia_tipo_idPreferencia_tipo";
+	
+	
+	//Preferencias_tipo
+	public static final String TAG_PREFERENCIAS_TIPO = "Preferencia_tipo";
+	public static final String TAG_PREFERENCIAS_TIPO_NOMBRE = "Preferencia_tipo_nombre";
+	public static final String TAG_PREFERENCIAS_TIPO_VALOR = "Preferencia_tipo_valor";
 	//////
 
 
@@ -117,6 +161,7 @@ GooglePlayServicesClient.OnConnectionFailedListener{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.vermapa);
 
+		UserData.initall();
 
 		mLocationClient = new LocationClient(this, this, this);
 
@@ -125,8 +170,7 @@ GooglePlayServicesClient.OnConnectionFailedListener{
 		mMap = mapFragment.getMap();
 		//and enable its location
 		mMap.setMyLocationEnabled(true);
-		new getID().execute();
-
+		
 
 
 
@@ -142,8 +186,9 @@ GooglePlayServicesClient.OnConnectionFailedListener{
 		}else{
 			usuario="error";
 		}///
+		
 		new getID().execute();
-
+		
 		perfilUsuario = (TextView) findViewById(R.id.nombreClienteMapa);
 		perfilUsuario.setText(usuario);
 
@@ -200,10 +245,15 @@ GooglePlayServicesClient.OnConnectionFailedListener{
 							idRest = "6";
 							i.putExtra("idRest", idRest);
 							i.putExtra("usuario",usuario);
-							i.putExtra("idCliente",idCliente);
-							i.putExtra("Cliente_email",Cliente_email);
-							Toast.makeText(getApplicationContext(),"id cliente "+ idCliente, Toast.LENGTH_LONG).show();
-							Toast.makeText(getApplicationContext(), "email: "+ Cliente_email, Toast.LENGTH_LONG).show();
+							i.putExtra("idCliente",UserData.idCliente);
+							i.putExtra("Cliente_email",UserData.Cliente_email);
+							Toast.makeText(getApplicationContext(),"id cliente "+ UserData.idCliente, Toast.LENGTH_LONG).show();
+							Toast.makeText(getApplicationContext(), "email: "+ UserData.Cliente_email, Toast.LENGTH_LONG).show();
+						//	Toast.makeText(getApplicationContext(), "tipo preferencia: "+ UserData.lista3.remove(), Toast.LENGTH_LONG).show();
+//System.out.println("asdasd"+UserData.lista3.remove(map));
+							Toast.makeText(getApplicationContext(), "cliente nom: "+ UserData.Cliente_nombre, Toast.LENGTH_LONG).show();
+
+							
 							startActivity(i);
 						}
 						else if(arg0.getTitle().equalsIgnoreCase("El rancho del cordobes")){
@@ -211,8 +261,8 @@ GooglePlayServicesClient.OnConnectionFailedListener{
 							idRest = "7";
 							i.putExtra("idRest", idRest);
 							i.putExtra("usuario",usuario);
-							i.putExtra("idCliente",idCliente);
-							i.putExtra("Cliente_email",Cliente_email);
+							i.putExtra("idCliente",UserData.idCliente);
+							i.putExtra("Cliente_email",UserData.Cliente_email);
 							Toast.makeText(getApplicationContext(), idRest, Toast.LENGTH_LONG).show();
 							Toast.makeText(getApplicationContext(), idCliente, Toast.LENGTH_LONG).show();
 							startActivity(i);
@@ -222,8 +272,8 @@ GooglePlayServicesClient.OnConnectionFailedListener{
 							idRest = "8";
 							i.putExtra("idRest", idRest);
 							i.putExtra("usuario",usuario);
-							i.putExtra("idCliente",idCliente);
-							i.putExtra("Cliente_email",Cliente_email);
+							i.putExtra("idCliente",UserData.idCliente);
+							i.putExtra("Cliente_email",UserData.Cliente_email);
 							Toast.makeText(getApplicationContext(), idRest, Toast.LENGTH_LONG).show();
 							startActivity(i);
 						}
@@ -232,8 +282,8 @@ GooglePlayServicesClient.OnConnectionFailedListener{
 							idRest = "9";
 							i.putExtra("idRest", idRest);
 							i.putExtra("usuario",usuario);
-							i.putExtra("idCliente",idCliente);
-							i.putExtra("Cliente_email",Cliente_email);
+							i.putExtra("idCliente",UserData.idCliente);
+							i.putExtra("Cliente_email",UserData.Cliente_email);
 							Toast.makeText(getApplicationContext(), idRest, Toast.LENGTH_LONG).show();
 							startActivity(i);
 						}
@@ -258,6 +308,24 @@ GooglePlayServicesClient.OnConnectionFailedListener{
 				//////////
 
 				return false;
+			}
+		});
+		
+		
+		
+		versugerencias = (Button) findViewById(R.id.verSugerencia);
+		versugerencias.setOnClickListener(new View.OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+
+				Intent i = new Intent(getApplicationContext(), verSugerencias.class);
+				i.putExtra("usuario",usuario);
+				i.putExtra("idCliente",UserData.idCliente);
+				i.putExtra("Cliente_email",UserData.Cliente_email);
+				startActivity(i);
+
+				//finish();
 			}
 		});
 
@@ -287,9 +355,115 @@ GooglePlayServicesClient.OnConnectionFailedListener{
 					for (int i = 0; i < j1.length(); i++) {
 						JSONObject c = j1.getJSONObject(i);
 
-						idCliente = c.getString(TAG_ID);
-						Cliente_email = c.getString(TAG_EMAIL);
+//						idCliente = c.getString(TAG_ID);
+//						Cliente_email = c.getString(TAG_EMAIL);
+//						Cliente_nombre  = c.getString(TAG_NOMBRE);
+//						Cliente_apellidoPaterno	 = c.getString(TAG_APELLIDOP);
+//						Cliente_apellidoMaterno = c.getString(TAG_APELLIDOM);
+//						Cliente_rut	 = c.getString(TAG_RUT);
+//						Cliente_direccion = c.getString(TAG_DIRECCION);
+						
 
+						UserData.idCliente = c.getString(TAG_ID);
+						UserData.Cliente_email = c.getString(TAG_EMAIL);
+						UserData.Cliente_nombre  = c.getString(TAG_NOMBRE);
+						UserData.Cliente_apellidoPaterno	 = c.getString(TAG_APELLIDOP);
+						UserData.Cliente_apellidoMaterno = c.getString(TAG_APELLIDOM);
+						UserData.Cliente_rut	 = c.getString(TAG_RUT);
+						UserData.Cliente_direccion = c.getString(TAG_DIRECCION);
+					}
+					
+
+					new getPreferencias().execute();
+				} else {
+
+				}
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
+
+			return null;
+		}
+	}
+	
+	
+	
+	public class getPreferencias extends AsyncTask<String, String, String> {
+		protected String doInBackground(String... args) {
+
+			List<NameValuePair> params = new ArrayList<NameValuePair>();
+			params.add(new BasicNameValuePair("buscar", UserData.idCliente));
+
+			JSONObject json = jParser.makeHttpRequest(url_all_getPreferencias, "POST", params);
+
+			Log.d("All : Preferencias", json.toString());
+
+			try {
+				int success = json.getInt(TAG_SUCCESS);
+
+				if (success == 1) {
+					j2 = json.getJSONArray(TAG_PREFERENCIAS);
+
+					for (int i = 0; i < j2.length(); i++) {
+						JSONObject c = j2.getJSONObject(i);
+						map= new HashMap<String, Object>();
+						if( i == 0)
+							UserData.tipo_preferencia =  "idPreferencia_tipo = '" + c.getString(TAG_TIPO_PREFERENCIAS) + "'";
+						else{
+							UserData.tipo_preferencia += " OR idPreferencia_tipo = '" + c.getString(TAG_TIPO_PREFERENCIAS) + "'"; 
+						}
+						map.put(TAG_TIPO_PREFERENCIAS, c.getString(TAG_TIPO_PREFERENCIAS));
+
+						
+						// adding HashList to ArrayList
+						UserData.lista_preferencias.add(map);
+						System.out.println("pref: " + UserData.lista_preferencias.toString());
+					}
+					
+
+					new getPreferencias_tipo().execute();
+				} else {
+
+				}
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
+
+			return null;
+		}
+	}
+	
+	
+	
+	public class getPreferencias_tipo extends AsyncTask<String, String, String> {
+		protected String doInBackground(String... args) {
+
+			List<NameValuePair> params = new ArrayList<NameValuePair>();
+			params.add(new BasicNameValuePair("buscar", UserData.tipo_preferencia));
+			System.out.println("Tipo Pref: " + UserData.tipo_preferencia);
+			JSONObject json = jParser.makeHttpRequest(url_all_getPreferencias_tipo, "POST", params);
+
+			Log.d("All : Preferencias", json.toString());
+
+			try {
+				int success = json.getInt(TAG_SUCCESS);
+
+				if (success == 1) {
+					j2 = json.getJSONArray(TAG_PREFERENCIAS_TIPO);
+					for (int i = 0; i < j2.length(); i++) {
+						map= new HashMap<String, Object>();
+						JSONObject c = j2.getJSONObject(i);
+						
+						UserData.Preferencia_tipo_nombre = c.getString(TAG_PREFERENCIAS_TIPO_NOMBRE);
+						UserData.Preferencia_tipo_valor = c.getString(TAG_PREFERENCIAS_TIPO_VALOR);
+						
+						
+						map.put(TAG_PREFERENCIAS_TIPO_NOMBRE, c.getString(TAG_PREFERENCIAS_TIPO_NOMBRE));
+						map.put(TAG_PREFERENCIAS_TIPO_VALOR, c.getString(TAG_PREFERENCIAS_TIPO_VALOR));
+						
+						// adding HashList to ArrayList
+						UserData.lista_preferencias_tipo.add(map);
+						System.out.println(UserData.lista_preferencias_tipo.toString());
 					}
 				} else {
 
@@ -301,7 +475,8 @@ GooglePlayServicesClient.OnConnectionFailedListener{
 			return null;
 		}
 	}
-	//
+	
+	
 
 
 

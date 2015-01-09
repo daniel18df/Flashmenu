@@ -1,12 +1,10 @@
-package carta;
+package cl.flashmenu.aplicacion;
 
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-
-import mesas.horario;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
@@ -15,18 +13,14 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import cl.flashmenu.aplicacion.JSONParser;
-import cl.flashmenu.aplicacion.MainActivity;
-import cl.flashmenu.aplicacion.MainActivity.UserDa;
-import cl.flashmenu.aplicacion.Paypal;
 import cl.flashmenu.aplicacion.R;
 import cl.flashmenu.aplicacion.UserData;
-import cl.flashmenu.aplicacion.WeatherDataListAdapter;
 import cl.flashmenu.aplicacion.servidor;
 import cl.flashmenu.aplicacion.verMapa;
+import cl.flashmenu.aplicacion.verMapa.getPreferencias;
 import cliente.perfilCliente;
 
 
-import android.R.menu;
 import android.app.ListActivity;
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -39,10 +33,6 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
-import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
@@ -53,18 +43,20 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class listaPlatos2 extends ListActivity{
+public class verSugerencias extends ListActivity{
 
 	// Progress Dialog
 	private ProgressDialog pDialog;
 
 	//recibidos por intent
-	String usuario, idRest, mailRest, direccionRest, idCliente;
+	String usuario, idRest, mailRest, direccionRest, idCliente, Cliente_email;
 
 
-	String idd, nombreP, descripcionP, precioP;
+	String idRestaurant, nombreP, descripcionP, precioP;
 
-	String n, d, p;
+	String email_rest ,nombre_rest ,tipo_rest,direccion_rest; 
+
+	String n, d, p, idd;
 
 	TextView nn, dd, pp, totalEnCarta;
 
@@ -78,7 +70,8 @@ public class listaPlatos2 extends ListActivity{
 	ArrayList<HashMap<String, Object>> PlatosList;
 	ArrayList<HashMap<String, Object>> DatosPlatos;
 	DecimalFormat fmt;
-	private static String url_Lista_platos = servidor.ip() + servidor.ruta2()+"ListaPlatos.php";
+	private static String url_Lista_platos = servidor.ip() + servidor.ruta2()+"verSugerencias.php";
+	private static String url_all_getRest = servidor.ip() + servidor.ruta2()+"redtaurantes.php";
 
 	// JSON Node names
 	public static final String TAG_SUCCESS = "success";
@@ -93,16 +86,21 @@ public class listaPlatos2 extends ListActivity{
 	public static final String TAG_CANTIDAD = "cantidad";
 
 
-	private boolean agregar = true;
-	private Spinner spinner2;
-	private List<String> lista2;
-	String L;
-	ListActivity me;
+
+
+	private static final String TAG_IDREST = "idRestaurant";
+	private static final String TAG_NOMBREREST = "Rest_nombre";
+	private static final String TAG_TIPOREST = "Rest_tipo";
+	private static final String TAG_DESCRIPCIONREST = "Rest_descripcion";
+	private static final String TAG_EMAILREST = "Rest_email";
+	private static final String TAG_DIRECCIONREST = "Rest_direccion";
+	private static final String TAG_restaurant = "restaurant";
+
 
 	JSONArray j1 = null;
-	private int tipo = 0;
 
 	String preferencias_tipo; 
+	TextView perfilUsuario;
 
 	// JSONArray
 	JSONArray platosl = null;
@@ -110,35 +108,52 @@ public class listaPlatos2 extends ListActivity{
 	@SuppressWarnings("unchecked")
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
-		url_Lista_platos = UserData.url_actual;
-		tipo = UserData.tipo;
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.lista); 
+		setContentView(R.layout.lista2); 
+
 
 		//RECIBIR DATOS POR INTENT
 		Bundle extras = getIntent().getExtras();
 		if (extras != null) {
 
-			idRest  = extras.getString("idRest");
 			usuario  = extras.getString("usuario");
-			mailRest  = extras.getString("mailRest");
-			direccionRest  = extras.getString("direccionRest");
 			idCliente = extras.getString("idCliente");
+			Cliente_email = extras.getString("Cliente_email");
 
 		}else{
-			idRest="error";
 			usuario="error";
-			mailRest="error";
-			direccionRest="error";
 			idCliente = "error";
+			Cliente_email = "error";
 		}///
 		
-		DatosPorDefecto2();
+		perfilUsuario = (TextView) findViewById(R.id.nombreClienteMapa);
+		perfilUsuario.setText(usuario);
+
+
+		perfil = (TextView) findViewById(R.id.perfilInfoRestMapa);
+		perfil.setOnClickListener(new View.OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+
+
+				Intent i = new Intent(getApplicationContext(), perfilCliente.class);
+				i.putExtra("usuario",usuario);
+				i.putExtra("idCliente",idCliente);
+				startActivity(i);
+
+				//finish();
+			}
+		});
+		perfilTitulo = (TextView) findViewById(R.id.nombreClienteMapa);
+		perfilTitulo.setText("Sugerencias");
+
+
 		String columna;
 		if(UserData.lista_preferencias_tipo.size() > 1){
 			columna = getColumnName((String)((HashMap<String, Object>)UserData.lista_preferencias_tipo.get(0)).get(verMapa.TAG_PREFERENCIAS_TIPO_NOMBRE));
 			preferencias_tipo = columna + " = '" + ((HashMap<String, Object>)UserData.lista_preferencias_tipo.get(0)).get(verMapa.TAG_PREFERENCIAS_TIPO_VALOR) + "'";
-			
+
 			for(int i = 1; i<UserData.lista_preferencias_tipo.size(); i++){
 				columna = getColumnName((String)((HashMap<String, Object>)UserData.lista_preferencias_tipo.get(i)).get(verMapa.TAG_PREFERENCIAS_TIPO_NOMBRE));
 				preferencias_tipo += " OR " + columna + " = '" +((HashMap<String, Object>)UserData.lista_preferencias_tipo.get(i)).get(verMapa.TAG_PREFERENCIAS_TIPO_VALOR) + "'";
@@ -154,50 +169,10 @@ public class listaPlatos2 extends ListActivity{
 		System.out.println("preferencias " + preferencias_tipo);
 		new LoadAllplatos().execute();
 
-		me = this;
-		//		imagen = (ImageView) findViewById(R.id.imagen);
-		//		imagen.setImageResource(R.drawable.menu);
-
-
-
-		fmt = new DecimalFormat();
-		DecimalFormatSymbols fmts = new DecimalFormatSymbols();
-
-		fmts.setGroupingSeparator('.');
-
-		fmt.setGroupingSize(3);
-		fmt.setGroupingUsed(true);
-		fmt.setDecimalFormatSymbols(fmts);
-
-
-
-
-		perfilTitulo = (TextView) findViewById(R.id.nombreClienteLISTA);
-		perfilTitulo.setText(usuario);
-
-
-		perfilTitulo = (TextView) findViewById(R.id.nombreClienteLISTA);
-		perfilTitulo.setOnClickListener(new View.OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-
-
-				Intent i = new Intent(getApplicationContext(), perfilCliente.class);
-				i.putExtra("usuario",usuario);
-				i.putExtra("idCliente",idCliente);
-				startActivity(i);
-
-				//finish();
-			}
-		});
 
 
 		// Hashmap for ListView
-		PlatosList = new ArrayList<HashMap<String, Object>>();
-		DatosPlatos = new ArrayList<HashMap<String, Object>>();
-		totalEnCarta = (TextView)findViewById(R.id.totalEnCarta2);
-		totalEnCarta.setText("$" + fmt.format(UserData.Precio(tipo)));
+		PlatosList = new ArrayList<HashMap<String, Object>>();;
 
 
 		// Get listview
@@ -208,6 +183,8 @@ public class listaPlatos2 extends ListActivity{
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
+
+
 				HashMap<String, Object> elemento = (HashMap<String, Object>)getListAdapter().getItem(position);
 				RelativeLayout textView = (RelativeLayout)getListAdapter().getView(position, view, parent);
 				//nn = ((TextView) elemento.get(TAG_NOMBRE));
@@ -217,40 +194,28 @@ public class listaPlatos2 extends ListActivity{
 				n = (String)elemento.get(TAG_NOMBRE);
 				d = (String)elemento.get(TAG_DESCRIPCION);
 				p = (String)elemento.get(TAG_PRECIO);
+				idd = (String)elemento.get(TAG_ID);
 
 				HashMap<String, Object> map = new HashMap<String, Object>();
 				map.put(TAG_NOMBRE, n);
 				map.put(TAG_DESCRIPCION, d);
 				map.put(TAG_PRECIO, p);
+				map.put(TAG_ID, idd);
 				map.put(TAG_POSITION, position);
-				map.put(UserData.TAG_TIPO, tipo);
-				// adding HashList to ArrayList
-				int cantidad = Integer.parseInt(((TextView)view.findViewById(R.id.cantidadPlatosSeleccionados)).getText().toString());
-
-				if(agregar){
-					DatosPlatos.add(map);
-					UserData.lista.add(map);
-					cantidad++;
-					((TextView)view.findViewById(R.id.nombrePlato)).setTextColor(Color.BLACK);
-					((TextView)textView.findViewById(R.id.descripcionPlato)).setTextColor(Color.BLACK);
-					((TextView)textView.findViewById(R.id.precioPlato)).setTextColor(Color.BLACK);
-				}else{
-					if(cantidad>0){
-						DatosPlatos.remove(map);
-						UserData.lista.remove(map);
-						cantidad--;	
-					}
-					if(cantidad == 0){
-						((TextView)view.findViewById(R.id.nombrePlato)).setTextColor(Color.WHITE);
-						((TextView)textView.findViewById(R.id.descripcionPlato)).setTextColor(Color.WHITE);
-						((TextView)textView.findViewById(R.id.precioPlato)).setTextColor(Color.WHITE);
-					}
-
-				}
-				((TextView)view.findViewById(R.id.cantidadPlatosSeleccionados)).setText(String.valueOf(cantidad));
 
 
-				totalEnCarta.setText("$" + fmt.format(UserData.Precio(tipo)));
+				Intent i = new Intent(getApplicationContext(), Productos.class);
+				i.putExtra("idRest", idd);
+				i.putExtra("usuario", usuario);
+				i.putExtra("mailRest", email_rest);
+				i.putExtra("direccionRest", direccion_rest);
+				i.putExtra("idCliente", idCliente);
+				i.putExtra("Cliente_email", Cliente_email);
+				i.putExtra("nombre_rest", nombre_rest);
+
+
+				startActivity(i);
+
 			}
 		});
 
@@ -258,7 +223,7 @@ public class listaPlatos2 extends ListActivity{
 
 	}
 
-    private String getColumnName(String name){
+	private String getColumnName(String name){
 		String columna = "Nada";
 		if(name.equals("Comidas")){
 			columna = "Producto_tipo_preferencia";
@@ -267,51 +232,10 @@ public class listaPlatos2 extends ListActivity{
 			columna = "Producto_precio";
 		}
 		return columna;
-    	
-    }
-	private void DatosPorDefecto2() {
-		spinner2 = (Spinner) findViewById(R.id.spinnerCarta2);
-		lista2 = new ArrayList<String>();
-		spinner2 = (Spinner) this.findViewById(R.id.spinnerCarta2);
-		lista2.add("Agregar");
-		lista2.add("Quitar");
-
-
-		ArrayAdapter<String> adaptador = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, lista2);
-		adaptador.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-		spinner2.setAdapter(adaptador);
-
-		spinner2.setOnItemSelectedListener(new OnItemSelectedListener() {
-			@Override
-			public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
-				Toast.makeText(arg0.getContext(), "Seleccionado: " + arg0.getItemAtPosition(arg2).toString(), Toast.LENGTH_SHORT).show();
-				if(arg0.getItemAtPosition(arg2).toString().equals("Agregar")){
-					agregar = true;
-				}
-				else{
-					agregar = false;
-				}
-			}
-			@Override
-			public void onNothingSelected(AdapterView<?> arg0) {
-			}
-		});
 
 	}
 
 
-
-	@Override
-	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		super.onActivityResult(requestCode, resultCode, data);
-		// if result code 100
-		if (resultCode == 100) {
-			Intent intent = getIntent();
-			finish();
-			startActivity(intent);
-		}
-
-	}
 
 	/**
 	 * Background Async Task to Load all platos by making HTTP Request
@@ -324,7 +248,7 @@ public class listaPlatos2 extends ListActivity{
 		@Override
 		protected void onPreExecute() {
 			super.onPreExecute();
-			pDialog = new ProgressDialog(listaPlatos2.this);
+			pDialog = new ProgressDialog(verSugerencias.this);
 			pDialog.setMessage("Cargando platos. Please wait...");
 			pDialog.setIndeterminate(false);
 			pDialog.setCancelable(false);
@@ -338,7 +262,7 @@ public class listaPlatos2 extends ListActivity{
 			// Building Parameters
 			List<NameValuePair> params = new ArrayList<NameValuePair>();
 
-			params.add(new BasicNameValuePair("buscar", idRest));
+
 			params.add(new BasicNameValuePair("preferencias_tipo", preferencias_tipo));
 
 			// getting JSON string from URL
@@ -362,6 +286,7 @@ public class listaPlatos2 extends ListActivity{
 						nombreP = c.getString(TAG_NOMBRE);
 						descripcionP = c.getString(TAG_DESCRIPCION);
 						precioP = c.getString(TAG_PRECIO);
+						idRestaurant = c.getString(TAG_ID);
 
 
 						// creating new HashMap
@@ -371,6 +296,7 @@ public class listaPlatos2 extends ListActivity{
 						map.put(TAG_NOMBRE, nombreP);
 						map.put(TAG_DESCRIPCION, descripcionP);
 						map.put(TAG_PRECIO, precioP);
+						map.put(TAG_ID, idRestaurant);
 						//Spinner newSpinner = new Spinner(listaPlatos2.this);
 						//DatosPorDefecto2(newSpinner);
 						//map.put(TAG_SPINNER, null);
@@ -404,9 +330,9 @@ public class listaPlatos2 extends ListActivity{
 					/**
 					 * Updating parsed JSON data into ListView
 					 * */
-					WeatherDataListAdapter adapter = new WeatherDataListAdapter(
-							listaPlatos2.this, PlatosList, R.layout.list_itemplatos,
-							new String[] { TAG_NOMBRE, TAG_DESCRIPCION, TAG_PRECIO, TAG_CANTIDAD}, new int[] {R.id.nombrePlato, R.id.descripcionPlato, R.id.precioPlato, R.id.cantidadPlatosSeleccionados}, "platos");
+					ListAdapter adapter = new SimpleAdapter(
+							verSugerencias.this, PlatosList, R.layout.list_itemplatos,
+							new String[] { TAG_NOMBRE, TAG_DESCRIPCION, TAG_PRECIO, TAG_CANTIDAD}, new int[] {R.id.nombrePlato, R.id.descripcionPlato, R.id.precioPlato, R.id.cantidadPlatosSeleccionados});
 
 					//new String[] { TAG_NOMBRE, TAG_DESCRIPCION, TAG_PRECIO,TAG_SPINNER }, new int[] {R.id.nombrePlato, R.id.descripcionPlato, R.id.precioPlato, R.id.spinnerPlato});
 
@@ -421,6 +347,55 @@ public class listaPlatos2 extends ListActivity{
 
 		}
 
+	}
+
+
+
+
+	public class getRest extends AsyncTask<String, String, String> {
+		protected String doInBackground(String... args) {
+
+			List<NameValuePair> params = new ArrayList<NameValuePair>();
+			params.add(new BasicNameValuePair("buscar", idRest));
+
+			JSONObject json = jParser.makeHttpRequest(url_all_getRest, "POST", params);
+
+			Log.d("All : cliente", json.toString());
+
+			try {
+				int success = json.getInt(TAG_SUCCESS);
+
+				if (success == 1) {
+					j1 = json.getJSONArray(TAG_restaurant);
+
+					for (int i = 0; i < j1.length(); i++) {
+						JSONObject c = j1.getJSONObject(i);
+
+						//						idCliente = c.getString(TAG_ID);
+						//						Cliente_email = c.getString(TAG_EMAIL);
+						//						Cliente_nombre  = c.getString(TAG_NOMBRE);
+						//						Cliente_apellidoPaterno	 = c.getString(TAG_APELLIDOP);
+						//						Cliente_apellidoMaterno = c.getString(TAG_APELLIDOM);
+						//						Cliente_rut	 = c.getString(TAG_RUT);
+						//						Cliente_direccion = c.getString(TAG_DIRECCION);
+
+
+						email_rest = c.getString(TAG_EMAILREST);
+						nombre_rest  = c.getString(TAG_NOMBREREST);
+						tipo_rest	 = c.getString(TAG_TIPOREST);
+						direccion_rest = c.getString(TAG_DIRECCIONREST);
+					}
+
+
+				} else {
+
+				}
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
+
+			return null;
+		}
 	}
 
 

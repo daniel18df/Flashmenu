@@ -20,6 +20,7 @@ public class UserData {
 
 	public static String nombreUsuario;
 	public static  ArrayList lista;
+	public static  ArrayList lista2;
 	public static HashMap<String, Float> ratings;
 	public static int tipo;
 	public static String url_actual;

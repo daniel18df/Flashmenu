@@ -23,9 +23,9 @@ public class Productos extends Activity {
 	Button platos, bebidas, postres, menu;
 	TextView totalplatos, totalbebidas, totalpostres, totalmenu, cantidadplatos, cantidadbebidas, cantidadpostres, cantidadmenu,
 				perfil, perfilUsuario, titulo_rest;
-	//recibidos por intent
-	String usuario, idRest, mailRest, direccionRest, idCliente, Cliente_email;
-	String nombre_rest;
+//	//recibidos por intent
+//	String usuario, idRest, mailRest, direccionRest, idCliente, Cliente_email;
+//	String nombre_rest;
 
 
 
@@ -39,29 +39,29 @@ public class Productos extends Activity {
 		Bundle extras = getIntent().getExtras();
 		if (extras != null) {
 
-			idRest  = extras.getString("idRest");
-			usuario  = extras.getString("usuario");
-			mailRest  = extras.getString("mailRest");
-			direccionRest  = extras.getString("direccionRest");
-			idCliente = extras.getString("idCliente");
-			Cliente_email = extras.getString("Cliente_email");
-			nombre_rest = extras.getString("nombre_rest");
+//			idRest  = extras.getString("idRest");
+//			usuario  = extras.getString("usuario");
+//			mailRest  = extras.getString("mailRest");
+//			direccionRest  = extras.getString("direccionRest");
+//			idCliente = extras.getString("idCliente");
+//			Cliente_email = extras.getString("Cliente_email");
+//			nombre_rest = extras.getString("nombre_rest");
 
 		}else{
-			idRest="error";
-			usuario="error";
-			mailRest="error";
-			direccionRest="error";
-			idCliente = "error";
-			Cliente_email = "error";
-			nombre_rest = "error";
+//			idRest="error";
+//			usuario="error";
+//			mailRest="error";
+//			direccionRest="error";
+//			idCliente = "error";
+//			Cliente_email = "error";
+//			nombre_rest = "error";
 		}///
 
 		perfilUsuario = (TextView) findViewById(R.id.nombreClienteSelectMenu);
-		perfilUsuario.setText(usuario);
+		perfilUsuario.setText(UserData.Cliente_email);
 		
 		titulo_rest = (TextView) findViewById(R.id.titulo_rest);
-		titulo_rest.setText(nombre_rest);
+		titulo_rest.setText(UserData.Rest_nombre);
 		
 		
 		perfil = (TextView) findViewById(R.id.perfilSelectMenu);
@@ -72,8 +72,8 @@ public class Productos extends Activity {
 
 
 				Intent i = new Intent(getApplicationContext(), perfilCliente.class);
-				i.putExtra("usuario",usuario);
-				i.putExtra("idCliente",idCliente);
+//				i.putExtra("usuario",usuario);
+//				i.putExtra("idCliente",idCliente);
 				startActivity(i);
 
 				//finish();
@@ -91,12 +91,12 @@ public class Productos extends Activity {
 				UserData.url_actual = servidor.ip() + servidor.ruta2()+"ListaPlatos.php";
 				UserData.tipo = 0;
 				Intent i = new Intent(getApplicationContext(), listaPlatos2.class);
-				i.putExtra("idRest", idRest);
-				i.putExtra("usuario",usuario);
-				i.putExtra("mailRest", Cliente_email);
-				i.putExtra("direccionRest",direccionRest);
-				i.putExtra("idCliente",idCliente);
-				i.putExtra("Cliente_email",Cliente_email);
+//				i.putExtra("idRest", idRest);
+//				i.putExtra("usuario",usuario);
+//				i.putExtra("mailRest", Cliente_email);
+//				i.putExtra("direccionRest",direccionRest);
+//				i.putExtra("idCliente",idCliente);
+//				i.putExtra("Cliente_email",Cliente_email);
 				startActivity(i);
 				//finish();
 			}
@@ -112,12 +112,12 @@ public class Productos extends Activity {
 				UserData.url_actual = servidor.ip() + servidor.ruta2()+"ListaBebidas.php";
 				UserData.tipo = 1;
 				Intent i = new Intent(getApplicationContext(), listaPlatos2.class);
-				i.putExtra("idRest", idRest);
-				i.putExtra("usuario",usuario);
-				i.putExtra("mailRest", Cliente_email);
-				i.putExtra("direccionRest",direccionRest);
-				i.putExtra("idCliente",idCliente);
-				i.putExtra("Cliente_email",Cliente_email);
+//				i.putExtra("idRest", idRest);
+//				i.putExtra("usuario",usuario);
+//				i.putExtra("mailRest", Cliente_email);
+//				i.putExtra("direccionRest",direccionRest);
+//				i.putExtra("idCliente",idCliente);
+//				i.putExtra("Cliente_email",Cliente_email);
 				startActivity(i);
 
 				//finish();
@@ -133,12 +133,12 @@ public class Productos extends Activity {
 				UserData.url_actual = servidor.ip() + servidor.ruta2()+"ListaPostres.php";
 				UserData.tipo = 2;
 				Intent i = new Intent(getApplicationContext(), listaPlatos2.class);
-				i.putExtra("idRest", idRest);
-				i.putExtra("usuario",usuario);
-				i.putExtra("mailRest", Cliente_email);
-				i.putExtra("direccionRest",direccionRest);
-				i.putExtra("idCliente",idCliente);
-				i.putExtra("Cliente_email",Cliente_email);
+//				i.putExtra("idRest", idRest);
+//				i.putExtra("usuario",usuario);
+//				i.putExtra("mailRest", Cliente_email);
+//				i.putExtra("direccionRest",direccionRest);
+//				i.putExtra("idCliente",idCliente);
+//				i.putExtra("Cliente_email",Cliente_email);
 				startActivity(i);
 
 				//finish();
@@ -154,12 +154,12 @@ public class Productos extends Activity {
 				UserData.url_actual = servidor.ip() + servidor.ruta2()+"ListaMenu.php";
 				UserData.tipo = 3;
 				Intent i = new Intent(getApplicationContext(), listaPlatos2.class);
-				i.putExtra("idRest", idRest);
-				i.putExtra("usuario",usuario);
-				i.putExtra("mailRest", Cliente_email);
-				i.putExtra("direccionRest",direccionRest);
-				i.putExtra("idCliente",idCliente);
-				i.putExtra("Cliente_email",Cliente_email);
+//				i.putExtra("idRest", idRest);
+//				i.putExtra("usuario",usuario);
+//				i.putExtra("mailRest", Cliente_email);
+//				i.putExtra("direccionRest",direccionRest);
+//				i.putExtra("idCliente",idCliente);
+//				i.putExtra("Cliente_email",Cliente_email);
 				startActivity(i);
 
 				//finish();
@@ -173,12 +173,12 @@ public class Productos extends Activity {
 			public void onClick(View v) {
 				Intent in = new Intent(getApplicationContext(),	Calendario.class);
 
-				in.putExtra("idRest", idRest);
-				in.putExtra("idCliente",idCliente);
-				in.putExtra("usuario", usuario);
-				in.putExtra("mailRest", mailRest);
-				in.putExtra("direccionRest", direccionRest);
-				Toast.makeText(getApplicationContext(), idCliente, Toast.LENGTH_LONG).show();
+//				in.putExtra("idRest", idRest);
+//				in.putExtra("idCliente",idCliente);
+//				in.putExtra("usuario", usuario);
+//				in.putExtra("mailRest", mailRest);
+//				in.putExtra("direccionRest", direccionRest);
+//				Toast.makeText(getApplicationContext(), idCliente, Toast.LENGTH_LONG).show();
 
 				startActivity(in);
 

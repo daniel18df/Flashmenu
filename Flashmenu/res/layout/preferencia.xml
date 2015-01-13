@@ -43,7 +43,7 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="719dp"
+            android:layout_height="648dp"
             android:orientation="vertical" >
 
             <LinearLayout
@@ -61,39 +61,12 @@
                     android:text="Comidas"
                     android:textAppearance="?android:attr/textAppearanceLarge"
                     android:textColor="#FFFFFF"
-                    android:textSize="20sp"
-                    android:textStyle="bold|italic" />
+                    android:textSize="20sp" />
 
                 <ListView
                     android:id="@android:id/list"
                     android:layout_width="match_parent"
-                    android:layout_height="179dp" >
-                </ListView>
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/linearLayoutPreferencias2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentRight="true"
-                android:orientation="vertical" >
-
-                <TextView
-                    android:id="@+id/TextView02"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Precio   "
-                    android:textAppearance="?android:attr/textAppearanceLarge"
-                    android:textColor="#FFFFFF"
-                    android:textSize="20sp"
-                    android:textStyle="bold|italic" />
-
-                <ListView
-                    android:id="@android:id/list"
-                    android:layout_width="match_parent"
-                    android:layout_height="175dp" >
+                    android:layout_height="245dp" >
                 </ListView>
             </LinearLayout>
 
@@ -101,9 +74,9 @@
                 android:id="@+id/linearLayoutPreferencias3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
                 android:layout_alignParentLeft="true"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
+                android:layout_marginBottom="36dp"
                 android:orientation="vertical" >
 
                 <TextView
@@ -113,19 +86,80 @@
                     android:text="Cercania de restaurantes   "
                     android:textAppearance="?android:attr/textAppearanceLarge"
                     android:textColor="#FFFFFF"
-                    android:textSize="20sp"
-                    android:textStyle="bold|italic" />
+                    android:textSize="20sp" />
 
-                <ListView
-                    android:id="@android:id/list"
-                    android:layout_width="match_parent"
-                    android:layout_height="183dp" >
-                </ListView>
+                <RadioGroup
+                    android:id="@+id/radioGroup2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" >
+
+                    <RadioButton
+                        android:id="@+id/radio0"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:checked="true"
+                        android:text="400 a 1200mts" />
+
+                    <RadioButton
+                        android:id="@+id/radio1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="1200 a 2000mts" />
+
+                    <RadioButton
+                        android:id="@+id/radio2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="2000mts o mas" />
+                </RadioGroup>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/linearLayoutPreferencias2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_below="@+id/linearLayoutPreferencias1"
+                android:orientation="vertical" >
+
+                <TextView
+                    android:id="@+id/TextView02"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Precio   "
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:textColor="#FFFFFF"
+                    android:textSize="20sp" />
+
+                <RadioGroup
+                    android:id="@+id/radioGroup1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" >
+
+                    <RadioButton
+                        android:id="@+id/radioa"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:checked="true"
+                        android:text="1990 a 3990" />
+
+                    <RadioButton
+                        android:id="@+id/radiob"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="3990 a 5990" />
+
+                    <RadioButton
+                        android:id="@+id/radioc"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="5990 o mas" />
+                </RadioGroup>
             </LinearLayout>
 
         </RelativeLayout>
-
     </ScrollView>
+
     <TextView
         android:id="@+id/nr"
         android:layout_width="wrap_content"
@@ -137,12 +171,5 @@
         android:textColor="#FFFFFF"
         android:textSize="30sp"
         android:textStyle="bold|italic" />
-
-    <Spinner
-        android:id="@+id/spinnerPreferencia2"
-        android:layout_width="157dp"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_below="@+id/relativeLayout4" />
 
 </RelativeLayout>

@@ -12,6 +12,7 @@ import org.json.JSONObject;
 import cl.flashmenu.aplicacion.JSONParser;
 import cl.flashmenu.aplicacion.Paypal;
 import cl.flashmenu.aplicacion.R;
+import cl.flashmenu.aplicacion.UserData;
 import cl.flashmenu.aplicacion.servidor;
 import cl.flashmenu.aplicacion.verMapa;
 import cl.flashmenu.aplicacion.R.id;
@@ -45,7 +46,7 @@ public class crearReserva extends Activity{
 
 	private static String url_create_Cliente = servidor.ip() + servidor.ruta2()+"nuevaReserva.php";
 
-	private static final String TAG_SUCCESS = "success";
+
 	
 	JSONParser jParser = new JSONParser();
 	
@@ -112,7 +113,7 @@ public class crearReserva extends Activity{
 			Log.d("Create Response", json.toString());
 
 			try {
-				int success = json.getInt(TAG_SUCCESS);
+				int success = json.getInt(UserData.TAG_SUCCESS);
 
 				if (success == 1) {
 
@@ -148,7 +149,7 @@ public class crearReserva extends Activity{
 			Log.d("Create Response", json.toString());
 
 			try {
-				int success = json.getInt(TAG_SUCCESS);
+				int success = json.getInt(UserData.TAG_SUCCESS);
 
 				if (success == 1) {
 					

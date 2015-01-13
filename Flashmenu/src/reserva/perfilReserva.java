@@ -12,6 +12,7 @@ import org.json.JSONObject;
 
 import cl.flashmenu.aplicacion.JSONParser;
 import cl.flashmenu.aplicacion.R;
+import cl.flashmenu.aplicacion.UserData;
 import cl.flashmenu.aplicacion.servidor;
 import cliente.perfilCliente;
 import android.app.Activity;
@@ -51,17 +52,6 @@ public class perfilReserva extends Activity{
 	private static String url_perfil_reserva = servidor.ip() + servidor.ruta2()+"perfilreserva.php";
 
 	// JSON Node names
-	private static final String TAG_SUCCESS = "success";
-	private static final String TAG_reserva = "reserva";
-	private static final String TAG_ID = "idReserva";
-	private static final String TAG_FECHA = "Reserva_fecha";
-	private static final String TAG_HORA = "Reserva_hora";
-	private static final String TAG_TOTAL = "Reserva_total";
-	private static final String TAG_DIRECCION = "Reserva_direccion";
-	private static final String TAG_PRODUCTOS = "Reserva_detalleProductos";
-	private static final String TAG_EMAIL = "Reserva_emailRest";
-	private static final String TAG_MESA = "Mesa_Nro_mesa";
-	private static final String TAG_CLIENTE = "Cliente_idCliente";
 
 
 
@@ -86,20 +76,11 @@ public class perfilReserva extends Activity{
 		//RECIBIR DATOS POR INTENT
 		Bundle extras = getIntent().getExtras();
 		if (extras != null) {
-			usuario  = extras.getString("usuario");
-			idCliente = extras.getString("idCliente");
-			f  = extras.getString("f");
-			h = extras.getString("h");
 			i = extras.getString("i");
-
-
+	
 		}else{
-			f="error";
-			h="error";
 			i="error";
-			usuario="error";
-			idCliente = "error";
-		}///
+		}///	
 
 		new LoadAllReserva().execute();
 
@@ -117,7 +98,7 @@ public class perfilReserva extends Activity{
 		productos_reserva = (TextView) findViewById(R.id.detalleproductosComprados_reserva);
 
 		perfilUsuario = (TextView) findViewById(R.id.nombreCliente_perfilreserva);
-		perfilUsuario.setText(usuario);
+		perfilUsuario.setText(UserData.Cliente_email);
 
 		perfil = (TextView) findViewById(R.id.perfil_perfilreserva);
 		perfil.setOnClickListener(new View.OnClickListener() {
@@ -127,8 +108,6 @@ public class perfilReserva extends Activity{
 
 
 				Intent i = new Intent(getApplicationContext(), perfilCliente.class);
-				i.putExtra("usuario",usuario);
-				i.putExtra("idCliente",idCliente);
 				startActivity(i);
 
 				//finish();
@@ -197,25 +176,25 @@ public class perfilReserva extends Activity{
 
 			try {
 				// Checking for SUCCESS TAG
-				int success = json.getInt(TAG_SUCCESS);
+				int success = json.getInt(UserData.TAG_SUCCESS);
 
 				if (success == 1) {
 
-					platosl = json.getJSONArray(TAG_reserva);
+					platosl = json.getJSONArray(UserData.TAG_reserva);
 
 
 					for (int i = 0; i < platosl.length(); i++) {
 						JSONObject c = platosl.getJSONObject(i);
 
-						idReserva = c.getString(TAG_ID);
-						fecha = c.getString(TAG_FECHA);
-						hora = c.getString(TAG_HORA);
-						total = c.getString(TAG_TOTAL);
-						dir = c.getString(TAG_DIRECCION);
-						pro = c.getString(TAG_PRODUCTOS);
-						email = c.getString(TAG_EMAIL);
-						mesa = c.getString(TAG_MESA);
-						cli = c.getString(TAG_CLIENTE);
+//						idReserva = c.getString(UserData.TAG_ID_RESERVA);
+//						fecha = c.getString(UserData.TAG_FECHA_RESERVA);
+//						hora = c.getString(UserData.TAG_HORA_RESERVA);
+						UserData.VReserva_total = c.getString(UserData.TAG_TOTAL_RESERVA);
+						UserData.VReserva_direccion = c.getString(UserData.TAG_DIRECCION_RESERVA);
+						UserData.VReserva_detalleProductos = c.getString(UserData.TAG_DETALLEPRO_RESERVA);
+						UserData.VReserva_email = c.getString(UserData.TAG_EMAIL_RESERVA);
+						UserData.VReserva_Mesa_Nro_mesa = c.getString(UserData.TAG_MESA_RESERVA);
+						UserData.VReserva_Cliente_idCliente = c.getString(UserData.TAG_CLIENTE_RESERVA);
 
 
 
@@ -238,12 +217,12 @@ public class perfilReserva extends Activity{
 
 			pDialog.dismiss();
 			
-			fecha_reserva.setText(fecha);
-			hora_reserva.setText(hora);
-			direccion_reserva.setText(dir);
-			total_reserva.setText(total);
-			productos_reserva.setText(pro);
-			perfilUsuario.setText(usuario);
+			fecha_reserva.setText(UserData.VReserva_fecha);
+			hora_reserva.setText(UserData.VReserva_hora);
+			direccion_reserva.setText(UserData.VReserva_direccion);
+			total_reserva.setText(UserData.VReserva_total);
+			productos_reserva.setText(UserData.VReserva_detalleProductos);
+			perfilUsuario.setText(UserData.Cliente_email);
 		}
 	}
 	
@@ -273,7 +252,7 @@ public class perfilReserva extends Activity{
 			Log.d("Create Response", json.toString());
 
 			try {
-				int success = json.getInt(TAG_SUCCESS);
+				int success = json.getInt(UserData.TAG_SUCCESS);
 
 				if (success == 1) {
 

@@ -42,7 +42,7 @@ public class WeatherDataListAdapter extends SimpleAdapter {
 		int cantidad=0;
 		view = super.getView(arg0, view, arg2);
 		for(int i = 0;i<comprarador.size();i++){
-			String comparer = (String)((HashMap<String,Object>)comprarador.get(i)).get(listaPlatos2.TAG_NOMBRE);
+			String comparer = (String)((HashMap<String,Object>)comprarador.get(i)).get(UserData.TAG_NOMBRE_PRODUCTO);
 			//String comparer2 = (String)((HashMap<String,Object>)comprarador.get(i)).get(listaBebidas.TAG_NOMBRE);
 			
 			if(comparer != null && comparer.equals(((TextView)view.findViewById(R.id.nombrePlato)).getText().toString())){

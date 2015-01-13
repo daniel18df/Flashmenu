@@ -155,7 +155,7 @@
  AIzaSyBNPke-ZhKdykkDBS2iWFTvKjUhOPSxlmw-->
         <meta-data
             android:name="com.google.android.maps.v2.API_KEY"
-            android:value="AIzaSyAJsICLAZMYdLkcdIFwcnL8ntyCBCRPWkw" />
+            android:value="AIzaSyA1AtC2u3ti7LbKQw1pFhZ7Wld_LRL5zLM" />
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />

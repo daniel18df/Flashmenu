@@ -14,6 +14,7 @@ import org.json.JSONObject;
 import cl.flashmenu.aplicacion.JSONParser;
 import cl.flashmenu.aplicacion.Paypal;
 import cl.flashmenu.aplicacion.R;
+import cl.flashmenu.aplicacion.UserData;
 import cl.flashmenu.aplicacion.servidor;
 import cliente.crearReserva;
 import cliente.perfilCliente;
@@ -47,7 +48,7 @@ public class verMesas  extends ListActivity {
 	TextView perfil, cerrar, perfilTitulo;
 
 	//desde intent
-	String idRest, usuario, mailRest, direccionRest, idCliente, Cliente_email, hora, fecha;
+	//String idRest, usuario, mailRest, direccionRest, idCliente, Cliente_email, hora, fecha;
 
 	//variables para obtener json y radiobutton
 	String numero, descripcion, cantidad_personas, n, d, c;
@@ -66,11 +67,6 @@ public class verMesas  extends ListActivity {
 	private static String url_Lista_horario = servidor.ip() + servidor.ruta2()+"verMesas.php";
 
 	// JSON Node names
-	private static final String TAG_SUCCESS = "success";
-	private static final String TAG_mesa = "mesa";
-	private static final String TAG_NRO = "Mesa_nro";
-	private static final String TAG_DESCRIPCION = "Mesa_descripcion";
-	private static final String TAG_CANTIDAD = "Mesa_cantPersonas";
 
 
 
@@ -88,32 +84,32 @@ public class verMesas  extends ListActivity {
 		setContentView(R.layout.lista2);
 
 
-		//RECIBIR DATOS POR INTENT
-		Bundle extras = getIntent().getExtras();
-		if (extras != null) {
-
-			idRest  = extras.getString("idRest");//
-			usuario  = extras.getString("usuario");//
-			mailRest  = extras.getString("mailRest");//
-			direccionRest  = extras.getString("direccionRest");//
-			idCliente = extras.getString("idCliente");
-			Cliente_email = extras.getString("Cliente_email");
-			hora = extras.getString("hora");
-			fecha = extras.getString("fecha");
-
-
-		}else{
-			idRest="error";
-			usuario="error";
-			mailRest="error";
-			direccionRest="error";
-			idCliente = "error";
-			Cliente_email = "error";
-			hora = "error";
-			fecha = "error";
-		}///
+//		//RECIBIR DATOS POR INTENT
+//		Bundle extras = getIntent().getExtras();
+//		if (extras != null) {
+//
+//			idRest  = extras.getString("idRest");//
+//			usuario  = extras.getString("usuario");//
+//			mailRest  = extras.getString("mailRest");//
+//			direccionRest  = extras.getString("direccionRest");//
+//			idCliente = extras.getString("idCliente");
+//			Cliente_email = extras.getString("Cliente_email");
+//			hora = extras.getString("hora");
+//			fecha = extras.getString("fecha");
+//
+//
+//		}else{
+//			idRest="error";
+//			usuario="error";
+//			mailRest="error";
+//			direccionRest="error";
+//			idCliente = "error";
+//			Cliente_email = "error";
+//			hora = "error";
+//			fecha = "error";
+//		}///
 		new LoadAllplatos().execute();
-		Toast.makeText(getApplicationContext(), "id cli: "+idCliente, Toast.LENGTH_LONG).show();
+//		Toast.makeText(getApplicationContext(), "id cli: "+idCliente, Toast.LENGTH_LONG).show();
 
 
 		titulo = (TextView) findViewById(R.id.titulolista2);
@@ -123,7 +119,7 @@ public class verMesas  extends ListActivity {
 		imagen.setImageResource(R.drawable.mesas);
 
 		perfilTitulo = (TextView) findViewById(R.id.nombreClienteLISTA2);
-		perfilTitulo.setText(usuario);
+		perfilTitulo.setText(UserData.Cliente_email);
 		perfil = (TextView) findViewById(R.id.perfilInfoRest2);
 		perfil.setOnClickListener(new View.OnClickListener() {
 
@@ -133,8 +129,8 @@ public class verMesas  extends ListActivity {
 
 
 				Intent i = new Intent(getApplicationContext(), perfilCliente.class);
-				i.putExtra("usuario",usuario);
-				i.putExtra("idCliente",idCliente);
+//				i.putExtra("usuario",usuario);
+//				i.putExtra("idCliente",idCliente);
 				startActivity(i);
 
 				//finish();
@@ -159,20 +155,20 @@ public class verMesas  extends ListActivity {
 
 
 				m1 = ((TextView) view.findViewById(R.id.numero_mesa));
-				m =	m1.getText().toString();
+				UserData.Mesa_nro =	m1.getText().toString();
 
 
 
 				Intent i = new Intent(getApplicationContext(), Paypal.class);
-				i.putExtra("hora", hora);
-				i.putExtra("idRest", idRest);
-				i.putExtra("usuario", usuario);
-				i.putExtra("mailRest", mailRest);
-				i.putExtra("direccionRest", direccionRest);
-				i.putExtra("idCliente",idCliente);
-				i.putExtra("Cliente_email",Cliente_email);
-				i.putExtra("fecha",fecha);
-				i.putExtra("mesa",m);
+//				i.putExtra("hora", hora);
+//				i.putExtra("idRest", idRest);
+//				i.putExtra("usuario", usuario);
+//				i.putExtra("mailRest", mailRest);
+//				i.putExtra("direccionRest", direccionRest);
+//				i.putExtra("idCliente",idCliente);
+//				i.putExtra("Cliente_email",Cliente_email);
+//				i.putExtra("fecha",fecha);
+//				i.putExtra("mesa",m);
 				startActivity(i);
 
 			}
@@ -219,7 +215,7 @@ public class verMesas  extends ListActivity {
 			// Building Parameters
 			List<NameValuePair> params = new ArrayList<NameValuePair>();
 
-			params.add(new BasicNameValuePair("buscar", idRest));
+			params.add(new BasicNameValuePair("buscar", UserData.idRestaurant));
 
 			// getting JSON string from URL
 			JSONObject json = jParser.makeHttpRequest(url_Lista_horario, "POST", params);
@@ -229,20 +225,20 @@ public class verMesas  extends ListActivity {
 
 			try {
 				// Checking for SUCCESS TAG
-				int success = json.getInt(TAG_SUCCESS);
+				int success = json.getInt(UserData.TAG_SUCCESS);
 
 				if (success == 1) {
 
-					horariosl = json.getJSONArray(TAG_mesa);
+					horariosl = json.getJSONArray(UserData.TAG_mesa);
 
 
 					for (int i = 0; i < horariosl.length(); i++) {
 						JSONObject c = horariosl.getJSONObject(i);
 
 
-						numero = c.getString(TAG_NRO);
-						descripcion = c.getString(TAG_DESCRIPCION);
-						cantidad_personas = c.getString(TAG_CANTIDAD);
+						numero = c.getString(UserData.TAG_MESA_NRO);
+						descripcion = c.getString(UserData.TAG_MESA_DESCRIPCION);
+						cantidad_personas = c.getString(UserData.TAG_MESA_CANTIDAD);
 
 
 
@@ -250,9 +246,9 @@ public class verMesas  extends ListActivity {
 						HashMap<String, String> map = new HashMap<String, String>();
 
 
-						map.put(TAG_NRO, numero);
-						map.put(TAG_DESCRIPCION, descripcion);
-						map.put(TAG_CANTIDAD, cantidad_personas);
+						map.put(UserData.TAG_MESA_NRO, numero);
+						map.put(UserData.TAG_MESA_DESCRIPCION, descripcion);
+						map.put(UserData.TAG_MESA_CANTIDAD, cantidad_personas);
 
 
 						// adding HashList to ArrayList
@@ -285,7 +281,7 @@ public class verMesas  extends ListActivity {
 					 * */
 					ListAdapter adapter = new SimpleAdapter(
 							verMesas.this, horariosList, R.layout.lista_itemmesas,
-							new String[] { TAG_NRO, TAG_DESCRIPCION, TAG_CANTIDAD }, new int[] {R.id.numero_mesa, R.id.descripcion_mesa, R.id.cantidad_personas});
+							new String[] { UserData.TAG_MESA_NRO, UserData.TAG_MESA_DESCRIPCION, UserData.TAG_MESA_CANTIDAD }, new int[] {R.id.numero_mesa, R.id.descripcion_mesa, R.id.cantidad_personas});
 
 
 					// updating listview

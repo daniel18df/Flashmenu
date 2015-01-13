@@ -14,6 +14,7 @@ import org.json.JSONObject;
 
 import cl.flashmenu.aplicacion.JSONParser;
 import cl.flashmenu.aplicacion.R;
+import cl.flashmenu.aplicacion.UserData;
 import cl.flashmenu.aplicacion.servidor;
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -49,15 +50,7 @@ public class modificarCliente extends Activity {
 //datos tablas
 	String id, nombre, apellido_paterno, apellido_materno, rut, email, direccion;
 
-	private static final String TAG_SUCCESS = "success";
-//	private static final String TAG_ID = "idCliente";
-//	private static final String TAG_NOMBRE = "Cliente_nombre";
-//	private static final String TAG_APELLIDOPATERNO = "Cliente_apellidoPaterno";
-//	private static final String TAG_APELLIDOMATERNO = "Cliente_apellidoMaterno";
-//	private static final String TAG_RUT = "Cliente_rut";
-	private static final String TAG_EMAIL = "Cliente_email";
-	private static final String TAG_DIRECCION = "Cliente_direccion";
-	private static final String TAG_cliente = "Cliente";
+
 
 	String nom, contrasena;
 	JSONArray rest = null;
@@ -133,10 +126,10 @@ public class modificarCliente extends Activity {
 			Log.d("All clientes: ", json.toString());
 
 		
-				 success = json.getInt(TAG_SUCCESS);
+				 success = json.getInt(UserData.TAG_SUCCESS);
 
 				if (success == 1) {
-					rest = json.getJSONArray(TAG_cliente);
+					rest = json.getJSONArray(UserData.TAG_cliente);
 					
 				
 					//for (int i = 0; i < rest.length(); i++) {
@@ -221,8 +214,8 @@ public class modificarCliente extends Activity {
 			// Building Parameters
 			List<NameValuePair> params = new ArrayList<NameValuePair>();
 			params.add(new BasicNameValuePair("idCliente", idCliente));
-			params.add(new BasicNameValuePair(TAG_EMAIL, nom));
-			params.add(new BasicNameValuePair(TAG_DIRECCION, contrasena));
+			params.add(new BasicNameValuePair(UserData.TAG_EMAIL_CLIENTE, nom));
+			params.add(new BasicNameValuePair(UserData.TAG_DIRECCION_CLIENTE, contrasena));
 
 
 			// sending modified data through http request
@@ -231,7 +224,7 @@ public class modificarCliente extends Activity {
 
 			// check json success tag
 			try {
-				int success = json.getInt(TAG_SUCCESS);
+				int success = json.getInt(UserData.TAG_SUCCESS);
 				
 				if (success == 1) {
 					// successfully updated

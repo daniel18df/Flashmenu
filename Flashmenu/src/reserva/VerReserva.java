@@ -14,6 +14,7 @@ import org.json.JSONObject;
 
 import cl.flashmenu.aplicacion.JSONParser;
 import cl.flashmenu.aplicacion.R;
+import cl.flashmenu.aplicacion.UserData;
 import cl.flashmenu.aplicacion.servidor;
 import cliente.perfilCliente;
 
@@ -37,11 +38,9 @@ public class VerReserva extends ListActivity{
 	// Progress Dialog
 	private ProgressDialog pDialog;
 
-	//recibidos por intent
-	String usuario, idRest, mailRest, direccionRest, idCliente;
 
 
-	String idd, fecha, hora, nombre_rest, direccion_rest;
+	String idd;
 
 	String h, f, i;
 
@@ -58,11 +57,6 @@ public class VerReserva extends ListActivity{
 	private static String url_Lista_platos = servidor.ip() + servidor.ruta2()+"verreserva.php";
 
 	// JSON Node names
-	private static final String TAG_SUCCESS = "success";
-	private static final String TAG_reserva = "reserva";
-	private static final String TAG_ID = "idReserva";
-	private static final String TAG_FECHA = "Reserva_fecha";
-	private static final String TAG_HORA = "Reserva_hora";
 //	
 //	private static final String TAG_NOMBREREST = "Rest_nombre";
 //	private static final String TAG_DIRECCIONREST = "Rest_direccion";
@@ -82,21 +76,10 @@ public class VerReserva extends ListActivity{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.lista2); 
 
-		//RECIBIR DATOS POR INTENT
-		Bundle extras = getIntent().getExtras();
-		if (extras != null) {
-
-
-			usuario  = extras.getString("usuario");
-			idCliente = extras.getString("idCliente");
-
-		}else{
-			usuario="error";
-			idCliente = "error";
-		}///
 		
+
 		perfilUsuario = (TextView) findViewById(R.id.nombreClienteLISTA2);
-		perfilUsuario.setText(usuario);
+		perfilUsuario.setText(UserData.Cliente_email);
 
 
 
@@ -114,8 +97,7 @@ public class VerReserva extends ListActivity{
 
 
 				Intent i = new Intent(getApplicationContext(), perfilCliente.class);
-				i.putExtra("usuario",usuario);
-				i.putExtra("idCliente",idCliente);
+				
 				startActivity(i);
 
 				//finish();
@@ -141,40 +123,15 @@ public class VerReserva extends ListActivity{
 //
 //				f = ((TextView) view.findViewById(R.id.text_fecha)).getText().toString();
 //				h = ((TextView) view.findViewById(R.id.text_hota)).getText().toString();
-//				i = ((TextView) view.findViewById(R.id.id_reserva)).getText().toString();
+				i = ((TextView) view.findViewById(R.id.text_id)).getText().toString();
 //
 
 				Intent in = new Intent(getApplicationContext(),	perfilReserva.class);
-				in.putExtra("f", fecha);
-				in.putExtra("h", hora);
-				in.putExtra("i", idd);
-				in.putExtra("usuario", usuario);
-				in.putExtra("idCliente", idCliente);
-
-
+				in.putExtra("i", i);
 				startActivityForResult(in, 100);
 
 			}
 		});
-
-//
-//		Button siguiente = (Button) findViewById(R.id.botonListas);
-//		siguiente.setOnClickListener(new View.OnClickListener() {
-//
-//			@Override
-//			public void onClick(View v) {
-//				Intent in = new Intent(getApplicationContext(),	horario.class);
-//
-//				in.putExtra("idRest", idRest);
-//				in.putExtra("idCliente",idCliente);
-//				in.putExtra("usuario", usuario);
-//				in.putExtra("mailRest", mailRest);
-//				in.putExtra("direccionRest", direccionRest);
-//				Toast.makeText(getApplicationContext(), idCliente, Toast.LENGTH_LONG).show();
-//
-//				startActivity(in);
-//			}
-//		});
 
 	}
 
@@ -217,7 +174,7 @@ public class VerReserva extends ListActivity{
 			// Building Parameters
 			List<NameValuePair> params = new ArrayList<NameValuePair>();
 
-			params.add(new BasicNameValuePair("buscar", idCliente));
+			params.add(new BasicNameValuePair("buscar", UserData.idCliente));
 
 			// getting JSON string from URL
 			JSONObject json = jParser.makeHttpRequest(url_Lista_platos, "POST", params);
@@ -227,20 +184,20 @@ public class VerReserva extends ListActivity{
 
 			try {
 				// Checking for SUCCESS TAG
-				int success = json.getInt(TAG_SUCCESS);
+				int success = json.getInt(UserData.TAG_SUCCESS);
 
 				if (success == 1) {
 
-					platosl = json.getJSONArray(TAG_reserva);
+					platosl = json.getJSONArray(UserData.TAG_reserva);
 //					platosl = json.getJSONArray(TAG_restaurant);
 
 
 					for (int i = 0; i < platosl.length(); i++) {
 						JSONObject c = platosl.getJSONObject(i);
 
-						idd = c.getString(TAG_ID);
-						fecha = c.getString(TAG_FECHA);
-						hora = c.getString(TAG_HORA);
+						idd = c.getString(UserData.TAG_ID_RESERVA);
+						UserData.VReserva_fecha = c.getString(UserData.TAG_FECHA_RESERVA);
+						UserData.VReserva_hora = c.getString(UserData.TAG_HORA_RESERVA);
 //						nombre_rest = c.getString(TAG_NOMBREREST);
 //						direccion_rest = c.getString(TAG_DIRECCIONREST);
 
@@ -249,9 +206,9 @@ public class VerReserva extends ListActivity{
 						// creating new HashMap
 						HashMap<String, String> map = new HashMap<String, String>();
 
-						map.put(TAG_ID, idd);
-						map.put(TAG_FECHA, fecha);
-						map.put(TAG_HORA, hora);
+						map.put(UserData.TAG_ID_RESERVA, idd);
+						map.put(UserData.TAG_FECHA_RESERVA, UserData.VReserva_fecha);
+						map.put(UserData.TAG_HORA_RESERVA, UserData.VReserva_hora);
 //						map.put(TAG_NOMBREREST, nombre_rest);
 //						map.put(TAG_DIRECCIONREST, direccion_rest);
 
@@ -286,7 +243,7 @@ public class VerReserva extends ListActivity{
 					 * */
 					ListAdapter adapter = new SimpleAdapter(
 							VerReserva.this, PlatosList, R.layout.lista_itemreserva,
-							new String[] { TAG_ID, TAG_FECHA, TAG_HORA}, new int[] {R.id.text_id, R.id.text_fecha, R.id.text_hota});
+							new String[] { UserData.TAG_ID_RESERVA, UserData.TAG_FECHA_RESERVA, UserData.TAG_HORA_RESERVA}, new int[] {R.id.text_id, R.id.text_fecha, R.id.text_hota});
 
 
 					// updating listview

@@ -38,7 +38,8 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="0.01" >
+        android:layout_weight="0.01"
+        android:gravity="center" >
 
         <TextView
             android:id="@+id/titulolista"
@@ -56,8 +57,8 @@
             android:id="@+id/titulo_rest"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentRight="true"
+            android:layout_alignLeft="@+id/titulolista"
+            android:layout_alignRight="@+id/titulolista"
             android:layout_below="@+id/titulolista"
             android:text=""
             android:textColor="#FFFFFF"

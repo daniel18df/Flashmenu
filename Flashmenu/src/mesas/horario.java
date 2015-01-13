@@ -14,6 +14,7 @@ import org.json.JSONObject;
 
 import cl.flashmenu.aplicacion.JSONParser;
 import cl.flashmenu.aplicacion.R;
+import cl.flashmenu.aplicacion.UserData;
 import cl.flashmenu.aplicacion.servidor;
 import cliente.perfilCliente;
 
@@ -47,9 +48,9 @@ public class horario  extends ListActivity {
 	TextView perfil, cerrar, perfilTitulo;
 
 	//desde intent
-	String idRest, usuario, mailRest, direccionRest, idCliente, nombrePlato, precioPlato, Cliente_email, fechas;
-	int tamano;
-	String elemento;
+//	String idRest, usuario, mailRest, direccionRest, idCliente, nombrePlato, precioPlato, Cliente_email, fechas;
+//	int tamano;
+//	String elemento;
 
 	//variables para obtener json y radiobutton
 	String hora, f, h;
@@ -65,10 +66,6 @@ public class horario  extends ListActivity {
 	private static String url_Lista_horario = servidor.ip() + servidor.ruta2()+"verHorario.php";
 
 	// JSON Node names
-	private static final String TAG_SUCCESS = "success";
-	private static final String TAG_horaios = "horarios_mesa";
-	private static final String TAG_FECHA = "Horarios_mesa_fecha";
-	private static final String TAG_HORA = "Horarios_mesa_hora";
 
 
 
@@ -88,38 +85,38 @@ public class horario  extends ListActivity {
 		setContentView(R.layout.lista2);
 
 
-		//RECIBIR DATOS POR INTENT
-		Bundle extras = getIntent().getExtras();
-		if (extras != null) {
+//		//RECIBIR DATOS POR INTENT
+//		Bundle extras = getIntent().getExtras();
+//		if (extras != null) {
+//
+//			idRest  = extras.getString("idRest");//
+//			usuario  = extras.getString("usuario");//
+//			mailRest  = extras.getString("mailRest");//
+//			direccionRest  = extras.getString("direccionRest");//
+//			idCliente = extras.getString("idCliente");
+//			Cliente_email = extras.getString("Cliente_email");
+//			precioPlato = extras.getString("precioPlato");
+//			nombrePlato = extras.getString("nombrePlato");
+//			fechas = extras.getString("fecha");
+//			//			for(int i = 0; i<16; i++){
+//			//				Object obj = sll.extract();
+//			//				if(obj != null)
+//			//					arreglo2[i] = (String)obj;
+//			//
+//			//				in.putExtra("nombrePlato", arreglo2);
+//			//			}
+//
+//
+//		}else{
+//			idRest="error";
+//			usuario="error";
+//			mailRest="error";
+//			direccionRest="error";
+//			idCliente = "error";
+//			Cliente_email = "error";
+//		}///
 
-			idRest  = extras.getString("idRest");//
-			usuario  = extras.getString("usuario");//
-			mailRest  = extras.getString("mailRest");//
-			direccionRest  = extras.getString("direccionRest");//
-			idCliente = extras.getString("idCliente");
-			Cliente_email = extras.getString("Cliente_email");
-			precioPlato = extras.getString("precioPlato");
-			nombrePlato = extras.getString("nombrePlato");
-			fechas = extras.getString("fecha");
-			//			for(int i = 0; i<16; i++){
-			//				Object obj = sll.extract();
-			//				if(obj != null)
-			//					arreglo2[i] = (String)obj;
-			//
-			//				in.putExtra("nombrePlato", arreglo2);
-			//			}
-
-
-		}else{
-			idRest="error";
-			usuario="error";
-			mailRest="error";
-			direccionRest="error";
-			idCliente = "error";
-			Cliente_email = "error";
-		}///
-
-		Toast.makeText(getApplicationContext(), "id cli: "+idCliente, Toast.LENGTH_LONG).show();
+	Toast.makeText(getApplicationContext(), "id rest: " + UserData.Horarios_mesa_fecha, Toast.LENGTH_LONG).show();
 
 		//Toast.makeText(getApplicationContext(), nombrePlato, Toast.LENGTH_LONG).show();
 
@@ -132,7 +129,7 @@ public class horario  extends ListActivity {
 		imagen.setImageResource(R.drawable.reloj);
 
 		perfilTitulo = (TextView) findViewById(R.id.nombreClienteLISTA2);
-		perfilTitulo.setText(usuario);
+		perfilTitulo.setText(UserData.Cliente_email);
 
 
 		perfil = (TextView) findViewById(R.id.perfilInfoRest2);
@@ -144,8 +141,8 @@ public class horario  extends ListActivity {
 
 
 				Intent i = new Intent(getApplicationContext(), perfilCliente.class);
-				i.putExtra("usuario",usuario);
-				i.putExtra("idCliente",idCliente);
+//				i.putExtra("usuario",usuario);
+//				i.putExtra("idCliente",idCliente);
 				startActivity(i);
 
 				//finish();
@@ -171,17 +168,17 @@ public class horario  extends ListActivity {
 
 
 				h1 = ((TextView) view.findViewById(R.id.textview_hora));
-				h =	h1.getText().toString();
+				UserData.Horarios_mesa_hora =	h1.getText().toString();
 
 				Intent i = new Intent(getApplicationContext(), verMesas.class);
-				i.putExtra("hora", h);
-				i.putExtra("idRest", idRest);
-				i.putExtra("usuario", usuario);
-				i.putExtra("mailRest", mailRest);
-				i.putExtra("direccionRest", direccionRest);
-				i.putExtra("idCliente",idCliente);
-				i.putExtra("Cliente_email",Cliente_email);
-				i.putExtra("fecha",fechas);
+//				i.putExtra("hora", h);
+//				i.putExtra("idRest", idRest);
+//				i.putExtra("usuario", usuario);
+//				i.putExtra("mailRest", mailRest);
+//				i.putExtra("direccionRest", direccionRest);
+//				i.putExtra("idCliente",idCliente);
+//				i.putExtra("Cliente_email",Cliente_email);
+//				i.putExtra("fecha",fechas);
 				startActivity(i);
 
 
@@ -217,8 +214,8 @@ public class horario  extends ListActivity {
 			// Building Parameters
 			List<NameValuePair> params = new ArrayList<NameValuePair>();
 
-			params.add(new BasicNameValuePair("buscar", idRest));
-			params.add(new BasicNameValuePair("buscar2", fechas));
+			params.add(new BasicNameValuePair("buscar", UserData.idRestaurant));
+			params.add(new BasicNameValuePair("buscar2", UserData.Horarios_mesa_fecha));
 
 			// getting JSON string from URL
 			JSONObject json = jParser.makeHttpRequest(url_Lista_horario, "POST", params);
@@ -228,11 +225,11 @@ public class horario  extends ListActivity {
 
 			try {
 				// Checking for SUCCESS TAG
-				int success = json.getInt(TAG_SUCCESS);
+				int success = json.getInt(UserData.TAG_SUCCESS);
 
 				if (success == 1) {
 
-					horariosl = json.getJSONArray(TAG_horaios);
+					horariosl = json.getJSONArray(UserData.TAG_horarios_mesa);
 
 
 					for (int i = 0; i < horariosl.length(); i++) {
@@ -240,7 +237,7 @@ public class horario  extends ListActivity {
 
 
 						//fecha = c.getString(TAG_FECHA);
-						hora = c.getString(TAG_HORA);
+						hora = c.getString(UserData.TAG_HORARIOS_MESA_HORA);
 
 
 
@@ -249,7 +246,7 @@ public class horario  extends ListActivity {
 
 
 						//	map.put(TAG_FECHA, fecha);
-						map.put(TAG_HORA, hora);
+						map.put(UserData.TAG_HORARIOS_MESA_HORA, hora);
 
 
 						// adding HashList to ArrayList
@@ -282,7 +279,7 @@ public class horario  extends ListActivity {
 					 * */
 					ListAdapter adapter = new SimpleAdapter(
 							horario.this, horariosList, R.layout.lista_itemhorarios,
-							new String[] { TAG_HORA }, new int[] {R.id.textview_hora});
+							new String[] { UserData.TAG_HORARIOS_MESA_HORA }, new int[] {R.id.textview_hora});
 
 
 					// updating listview

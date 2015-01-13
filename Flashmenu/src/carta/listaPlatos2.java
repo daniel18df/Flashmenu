@@ -59,7 +59,7 @@ public class listaPlatos2 extends ListActivity{
 	private ProgressDialog pDialog;
 
 	//recibidos por intent
-	String usuario, idRest, mailRest, direccionRest, idCliente;
+	String usuario;
 
 
 	String idd, nombreP, descripcionP, precioP;
@@ -80,17 +80,7 @@ public class listaPlatos2 extends ListActivity{
 	DecimalFormat fmt;
 	private static String url_Lista_platos = servidor.ip() + servidor.ruta2()+"ListaPlatos.php";
 
-	// JSON Node names
-	public static final String TAG_SUCCESS = "success";
-	public static final String TAG_platos = "Producto";
-	public static final String TAG_NOMBRE = "Producto_nombre";
-	public static final String TAG_DESCRIPCION = "Producto_descripcion";
-	public static final String TAG_PRECIO = "Producto_precio";
-	//public static final String TAG_TIPO = "Producto_tipo";
-	public static final String TAG_ID = "Restaurant_idRestaurant";
-	public static final String TAG_SPINNER = "Restaurant_spinner";
-	public static final String TAG_POSITION = "Position_Lista";
-	public static final String TAG_CANTIDAD = "cantidad";
+
 
 
 	private boolean agregar = true;
@@ -119,34 +109,34 @@ public class listaPlatos2 extends ListActivity{
 		Bundle extras = getIntent().getExtras();
 		if (extras != null) {
 
-			idRest  = extras.getString("idRest");
-			usuario  = extras.getString("usuario");
-			mailRest  = extras.getString("mailRest");
-			direccionRest  = extras.getString("direccionRest");
-			idCliente = extras.getString("idCliente");
+//			idRest  = extras.getString("idRest");
+//			usuario  = extras.getString("usuario");
+//			mailRest  = extras.getString("mailRest");
+//			direccionRest  = extras.getString("direccionRest");
+//			idCliente = extras.getString("idCliente");
 
 		}else{
-			idRest="error";
-			usuario="error";
-			mailRest="error";
-			direccionRest="error";
-			idCliente = "error";
+//			idRest="error";
+//			usuario="error";
+//			mailRest="error";
+//			direccionRest="error";
+//			idCliente = "error";
 		}///
 		
 		DatosPorDefecto2();
 		String columna;
 		if(UserData.lista_preferencias_tipo.size() > 1){
-			columna = getColumnName((String)((HashMap<String, Object>)UserData.lista_preferencias_tipo.get(0)).get(verMapa.TAG_PREFERENCIAS_TIPO_NOMBRE));
-			preferencias_tipo = columna + " = '" + ((HashMap<String, Object>)UserData.lista_preferencias_tipo.get(0)).get(verMapa.TAG_PREFERENCIAS_TIPO_VALOR) + "'";
+			columna = getColumnName((String)((HashMap<String, Object>)UserData.lista_preferencias_tipo.get(0)).get(UserData.TAG_PREFERENCIAS_TIPO_NOMBRE));
+			preferencias_tipo = columna + " = '" + ((HashMap<String, Object>)UserData.lista_preferencias_tipo.get(0)).get(UserData.TAG_PREFERENCIAS_TIPO_VALOR) + "'";
 			
 			for(int i = 1; i<UserData.lista_preferencias_tipo.size(); i++){
-				columna = getColumnName((String)((HashMap<String, Object>)UserData.lista_preferencias_tipo.get(i)).get(verMapa.TAG_PREFERENCIAS_TIPO_NOMBRE));
-				preferencias_tipo += " OR " + columna + " = '" +((HashMap<String, Object>)UserData.lista_preferencias_tipo.get(i)).get(verMapa.TAG_PREFERENCIAS_TIPO_VALOR) + "'";
+				columna = getColumnName((String)((HashMap<String, Object>)UserData.lista_preferencias_tipo.get(i)).get(UserData.TAG_PREFERENCIAS_TIPO_NOMBRE));
+				preferencias_tipo += " OR " + columna + " = '" +((HashMap<String, Object>)UserData.lista_preferencias_tipo.get(i)).get(UserData.TAG_PREFERENCIAS_TIPO_VALOR) + "'";
 			}
 		}
 		else if(UserData.lista_preferencias_tipo.size() == 1){
-			columna = getColumnName((String)((HashMap<String, Object>)UserData.lista_preferencias_tipo.get(0)).get(verMapa.TAG_PREFERENCIAS_TIPO_NOMBRE));
-			preferencias_tipo = columna + " = '" + ((HashMap<String, Object>)UserData.lista_preferencias_tipo.get(0)).get(verMapa.TAG_PREFERENCIAS_TIPO_VALOR) + "'";
+			columna = getColumnName((String)((HashMap<String, Object>)UserData.lista_preferencias_tipo.get(0)).get(UserData.TAG_PREFERENCIAS_TIPO_NOMBRE));
+			preferencias_tipo = columna + " = '" + ((HashMap<String, Object>)UserData.lista_preferencias_tipo.get(0)).get(UserData.TAG_PREFERENCIAS_TIPO_VALOR) + "'";
 		}
 		else 
 			preferencias_tipo = "";
@@ -172,8 +162,8 @@ public class listaPlatos2 extends ListActivity{
 
 
 
-		perfilTitulo = (TextView) findViewById(R.id.nombreClienteLISTA);
-		perfilTitulo.setText(usuario);
+	
+		
 
 
 		perfilTitulo = (TextView) findViewById(R.id.nombreClienteLISTA);
@@ -184,14 +174,14 @@ public class listaPlatos2 extends ListActivity{
 
 
 				Intent i = new Intent(getApplicationContext(), perfilCliente.class);
-				i.putExtra("usuario",usuario);
-				i.putExtra("idCliente",idCliente);
+//				i.putExtra("usuario",usuario);
+//				i.putExtra("idCliente",idCliente);
 				startActivity(i);
 
 				//finish();
 			}
 		});
-
+perfilTitulo.setText(UserData.Cliente_email);
 
 		// Hashmap for ListView
 		PlatosList = new ArrayList<HashMap<String, Object>>();
@@ -214,15 +204,15 @@ public class listaPlatos2 extends ListActivity{
 				//dd = ((TextView) elemento.get(TAG_DESCRIPCION));
 				//pp = ((TextView) elemento.get(TAG_PRECIO));
 
-				n = (String)elemento.get(TAG_NOMBRE);
-				d = (String)elemento.get(TAG_DESCRIPCION);
-				p = (String)elemento.get(TAG_PRECIO);
+				n = (String)elemento.get(UserData.TAG_NOMBRE_PRODUCTO);
+				d = (String)elemento.get(UserData.TAG_DESCRIPCION_PRODUCTO);
+				p = (String)elemento.get(UserData.TAG_PRECIO_PRODUCTO);
 
 				HashMap<String, Object> map = new HashMap<String, Object>();
-				map.put(TAG_NOMBRE, n);
-				map.put(TAG_DESCRIPCION, d);
-				map.put(TAG_PRECIO, p);
-				map.put(TAG_POSITION, position);
+				map.put(UserData.TAG_NOMBRE_PRODUCTO, n);
+				map.put(UserData.TAG_DESCRIPCION_PRODUCTO, d);
+				map.put(UserData.TAG_PRECIO_PRODUCTO, p);
+				map.put(UserData.TAG_POSITION_PRODUCTO, position);
 				map.put(UserData.TAG_TIPO, tipo);
 				// adding HashList to ArrayList
 				int cantidad = Integer.parseInt(((TextView)view.findViewById(R.id.cantidadPlatosSeleccionados)).getText().toString());
@@ -338,7 +328,7 @@ public class listaPlatos2 extends ListActivity{
 			// Building Parameters
 			List<NameValuePair> params = new ArrayList<NameValuePair>();
 
-			params.add(new BasicNameValuePair("buscar", idRest));
+			params.add(new BasicNameValuePair("buscar", UserData.idRestaurant));
 			params.add(new BasicNameValuePair("preferencias_tipo", preferencias_tipo));
 
 			// getting JSON string from URL
@@ -349,28 +339,28 @@ public class listaPlatos2 extends ListActivity{
 
 			try {
 				// Checking for SUCCESS TAG
-				int success = json.getInt(TAG_SUCCESS);
+				int success = json.getInt(UserData.TAG_SUCCESS);
 
 				if (success == 1) {
 
-					platosl = json.getJSONArray(TAG_platos);
+					platosl = json.getJSONArray(UserData.TAG_producto);
 
 					for (int i = 0; i < platosl.length(); i++) {
 						JSONObject c = platosl.getJSONObject(i);
 
 
-						nombreP = c.getString(TAG_NOMBRE);
-						descripcionP = c.getString(TAG_DESCRIPCION);
-						precioP = c.getString(TAG_PRECIO);
+						nombreP = c.getString(UserData.TAG_NOMBRE_PRODUCTO);
+						descripcionP = c.getString(UserData.TAG_DESCRIPCION_PRODUCTO);
+						precioP = c.getString(UserData.TAG_PRECIO_PRODUCTO);
 
 
 						// creating new HashMap
 						HashMap<String, Object> map = new HashMap<String, Object>();
 
 
-						map.put(TAG_NOMBRE, nombreP);
-						map.put(TAG_DESCRIPCION, descripcionP);
-						map.put(TAG_PRECIO, precioP);
+						map.put(UserData.TAG_NOMBRE_PRODUCTO, nombreP);
+						map.put(UserData.TAG_DESCRIPCION_PRODUCTO, descripcionP);
+						map.put(UserData.TAG_PRECIO_PRODUCTO, precioP);
 						//Spinner newSpinner = new Spinner(listaPlatos2.this);
 						//DatosPorDefecto2(newSpinner);
 						//map.put(TAG_SPINNER, null);
@@ -406,7 +396,7 @@ public class listaPlatos2 extends ListActivity{
 					 * */
 					WeatherDataListAdapter adapter = new WeatherDataListAdapter(
 							listaPlatos2.this, PlatosList, R.layout.list_itemplatos,
-							new String[] { TAG_NOMBRE, TAG_DESCRIPCION, TAG_PRECIO, TAG_CANTIDAD}, new int[] {R.id.nombrePlato, R.id.descripcionPlato, R.id.precioPlato, R.id.cantidadPlatosSeleccionados}, "platos");
+							new String[] { UserData.TAG_NOMBRE_PRODUCTO, UserData.TAG_DESCRIPCION_PRODUCTO, UserData.TAG_PRECIO_PRODUCTO, UserData.TAG_CANTIDAD_PRODUCTO}, new int[] {R.id.nombrePlato, R.id.descripcionPlato, R.id.precioPlato, R.id.cantidadPlatosSeleccionados}, "platos");
 
 					//new String[] { TAG_NOMBRE, TAG_DESCRIPCION, TAG_PRECIO,TAG_SPINNER }, new int[] {R.id.nombrePlato, R.id.descripcionPlato, R.id.precioPlato, R.id.spinnerPlato});
 

@@ -13,6 +13,7 @@ import org.json.JSONObject;
 
 import cl.flashmenu.aplicacion.JSONParser;
 import cl.flashmenu.aplicacion.R;
+import cl.flashmenu.aplicacion.UserData;
 import cl.flashmenu.aplicacion.servidor;
 import cliente.perfilCliente;
 
@@ -45,9 +46,8 @@ public class Calendario  extends ListActivity {
 	TextView perfil, cerrar, perfilTitulo;
 
 	//desde intent
-	String idRest, usuario, mailRest, direccionRest, idCliente, nombrePlato, precioPlato, Cliente_email, hora;
-	int tamano;
-	String elemento;
+	//String idRest, usuario, mailRest, direccionRest, idCliente, nombrePlato, precioPlato, Cliente_email, hora;
+	
 
 	//variables para obtener json y radiobutton
 	String fecha, f;
@@ -63,10 +63,6 @@ public class Calendario  extends ListActivity {
 	private static String url_Lista_fechas = servidor.ip() + servidor.ruta2()+"verFechas.php";
 
 	// JSON Node names
-	private static final String TAG_SUCCESS = "success";
-	private static final String TAG_horaios = "horarios_mesa";
-	private static final String TAG_FECHA = "Horarios_mesa_fecha";
-	private static final String TAG_HORA = "Horarios_mesa_hora";
 
 
 
@@ -85,38 +81,32 @@ public class Calendario  extends ListActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.lista2);
 
-
-		//RECIBIR DATOS POR INTENT
-		Bundle extras = getIntent().getExtras();
-		if (extras != null) {
-
-			idRest  = extras.getString("idRest");//
-			usuario  = extras.getString("usuario");//
-			mailRest  = extras.getString("mailRest");//
-			direccionRest  = extras.getString("direccionRest");//
-			idCliente = extras.getString("idCliente");
-			Cliente_email = extras.getString("Cliente_email");
-			precioPlato = extras.getString("precioPlato");
-			nombrePlato  = extras.getString("nombrePlato");//
-		//	hora  = extras.getString("hora");//
-
-			//			// A–adimos 10 Elementos en el ArrayList
-			for (int i=0; i<=tamano; i++){
-				nombreArrayList.add(nombrePlato); 
-			}
-
-
-		}else{
-			idRest="error";
-			usuario="error";
-			mailRest="error";
-			direccionRest="error";
-			idCliente = "error";
-			Cliente_email = "error";
-		}///
+//
+//		//RECIBIR DATOS POR INTENT
+//		Bundle extras = getIntent().getExtras();
+//		if (extras != null) {
+//
+//			idRest  = extras.getString("idRest");//
+//			usuario  = extras.getString("usuario");//
+//			mailRest  = extras.getString("mailRest");//
+//			direccionRest  = extras.getString("direccionRest");//
+//			idCliente = extras.getString("idCliente");
+//			Cliente_email = extras.getString("Cliente_email");
+//			precioPlato = extras.getString("precioPlato");
+//			nombrePlato  = extras.getString("nombrePlato");//
+//	
+//
+//		}else{
+//			idRest="error";
+//			usuario="error";
+//			mailRest="error";
+//			direccionRest="error";
+//			idCliente = "error";
+//			Cliente_email = "error";
+//		}///
 
 
-		Toast.makeText(getApplicationContext(), "id cli: "+idCliente, Toast.LENGTH_LONG).show();
+	//	Toast.makeText(getApplicationContext(), "id cli: "+idCliente, Toast.LENGTH_LONG).show();
 		new LoadAllplatos().execute();
 
 		titulo = (TextView) findViewById(R.id.titulolista2);
@@ -126,7 +116,7 @@ public class Calendario  extends ListActivity {
 		imagen.setImageResource(R.drawable.calendario);
 
 		perfilTitulo = (TextView) findViewById(R.id.nombreClienteLISTA2);
-		perfilTitulo.setText(usuario);
+		perfilTitulo.setText(UserData.Cliente_email);
 		perfil = (TextView) findViewById(R.id.perfilInfoRest2);
 		perfil.setOnClickListener(new View.OnClickListener() {
 
@@ -135,8 +125,8 @@ public class Calendario  extends ListActivity {
 
 
 				Intent i = new Intent(getApplicationContext(), perfilCliente.class);
-				i.putExtra("usuario",usuario);
-				i.putExtra("idCliente",idCliente);
+//				i.putExtra("usuario",usuario);
+//				i.putExtra("idCliente",idCliente);
 				startActivity(i);
 
 				//finish();
@@ -161,19 +151,19 @@ public class Calendario  extends ListActivity {
 
 
 				f1 = ((TextView) view.findViewById(R.id.textview_fecha));
-				f =	f1.getText().toString();
+				UserData.Horarios_mesa_fecha =	f1.getText().toString();
 
 
 
 				Intent i = new Intent(getApplicationContext(), horario.class);
 				//i.putExtra("hora", hora);
-				i.putExtra("idRest", idRest);
-				i.putExtra("usuario", usuario);
-				i.putExtra("mailRest", mailRest);
-				i.putExtra("direccionRest", direccionRest);
-				i.putExtra("idCliente",idCliente);
-				i.putExtra("Cliente_email",Cliente_email);
-				i.putExtra("fecha",f);
+//				i.putExtra("idRest", idRest);
+//				i.putExtra("usuario", usuario);
+//				i.putExtra("mailRest", mailRest);
+//				i.putExtra("direccionRest", direccionRest);
+//				i.putExtra("idCliente",idCliente);
+//				i.putExtra("Cliente_email",Cliente_email);
+//				i.putExtra("fecha",f);
 				startActivity(i);
 			}
 		});
@@ -208,7 +198,7 @@ public class Calendario  extends ListActivity {
 			// Building Parameters
 			List<NameValuePair> params = new ArrayList<NameValuePair>();
 
-			params.add(new BasicNameValuePair("buscar", idRest));
+			params.add(new BasicNameValuePair("buscar", UserData.idRestaurant));
 		//	params.add(new BasicNameValuePair("buscar2", hora));
 
 			// getting JSON string from URL
@@ -219,11 +209,11 @@ public class Calendario  extends ListActivity {
 
 			try {
 				// Checking for SUCCESS TAG
-				int success = json.getInt(TAG_SUCCESS);
+				int success = json.getInt(UserData.TAG_SUCCESS);
 
 				if (success == 1) {
 
-					horariosl = json.getJSONArray(TAG_horaios);
+					horariosl = json.getJSONArray(UserData.TAG_horarios_mesa);
 
 
 					for (int i = 0; i < horariosl.length(); i++) {
@@ -231,7 +221,7 @@ public class Calendario  extends ListActivity {
 
 
 						//fecha = c.getString(TAG_FECHA);
-						fecha = c.getString(TAG_FECHA);
+						fecha = c.getString(UserData.TAG_HORARIOS_MESA_FECHA);
 
 
 
@@ -240,7 +230,7 @@ public class Calendario  extends ListActivity {
 
 
 						//	map.put(TAG_FECHA, fecha);
-						map.put(TAG_FECHA, fecha);
+						map.put(UserData.TAG_HORARIOS_MESA_FECHA, fecha);
 
 
 						// adding HashList to ArrayList
@@ -273,7 +263,7 @@ public class Calendario  extends ListActivity {
 					 * */
 					ListAdapter adapter = new SimpleAdapter(
 							Calendario.this, horariosList, R.layout.lista_itemcalendario,
-							new String[] { TAG_FECHA }, new int[] {R.id.textview_fecha});
+							new String[] { UserData.TAG_HORARIOS_MESA_FECHA }, new int[] {R.id.textview_fecha});
 
 
 					// updating listview

@@ -10,6 +10,7 @@ import org.json.JSONObject;
 
 import cl.flashmenu.aplicacion.JSONParser;
 import cl.flashmenu.aplicacion.R;
+import cl.flashmenu.aplicacion.UserData;
 import cl.flashmenu.aplicacion.servidor;
 import cl.flashmenu.aplicacion.verMapa;
 import cl.flashmenu.aplicacion.R.id;
@@ -46,7 +47,7 @@ public class crearCliente extends Activity{
 		private static String url_create_Cliente = servidor.ip() + servidor.ruta2()+"nuevoCliente.php";
 		//private static String url_create_Cliente = "http://10.40.3.149/PHP/FlashmenuPHP/nuevoCliente.php";
 
-		private static final String TAG_SUCCESS = "success";
+		
 
 		@Override
 		public void onCreate(Bundle savedInstanceState) {
@@ -120,7 +121,7 @@ public class crearCliente extends Activity{
 				Log.d("Create Response", json.toString());
 
 				try {
-					int success = json.getInt(TAG_SUCCESS);
+					int success = json.getInt(UserData.TAG_SUCCESS);
 
 					if (success == 1) {
 						Intent i = new Intent(getApplicationContext(), inicioSesionCliente.class);

@@ -42,34 +42,13 @@ public class infoRestaurantes extends Activity implements OnRatingBarChangeListe
 	Button s;
 	TextView perfil, cerrar;
 
-
-	//datos tablas
-	String id, nombre, tipo, descripcion, email, direccion, idCliente, Cliente_email;
-
-
-	//variables intent
-	String usuario, idRest;
-
-
 	private ProgressDialog pDialog;
 
 	JSONParser jParser = new JSONParser();
 
 
-	//private static String url_all_inforest = "http://10.40.3.149/PHP/FlashmenuPHP/restaurantes.php";
-	//private static String url_all_inforest = "http://190.153.212.77/daniel_fernandez/restaurantes.php";
 	private static String url_all_inforest = servidor.ip() + servidor.ruta2() + "restaurantes.php";
 
-
-
-	private static final String TAG_SUCCESS = "success";
-	private static final String TAG_ID = "idRestaurant";
-	private static final String TAG_NOMBRE = "Rest_nombre";
-	private static final String TAG_TIPO = "Rest_tipo";
-	private static final String TAG_DESCRIPCION = "Rest_descripcion";
-	private static final String TAG_EMAIL = "Rest_email";
-	private static final String TAG_DIRECCION = "Rest_direccion";
-	private static final String TAG_restaurant = "restaurant";
 
 
 	JSONArray rest = null;
@@ -83,25 +62,10 @@ public class infoRestaurantes extends Activity implements OnRatingBarChangeListe
 		if(UserData.ratings == null){
 			UserData.ratings = new HashMap<String, Float>();
 		}
-		if(UserData.ratings.containsKey(nombre)){
-			rating.setRating(UserData.ratings.get(nombre));
+		if(UserData.ratings.containsKey(UserData.Rest_nombre)){
+			rating.setRating(UserData.ratings.get(UserData.Rest_nombre));
 		}
-		//RECIBIR DATOS POR INTENT
-		Bundle extras = getIntent().getExtras();
-		if (extras != null) {
-			usuario  = extras.getString("usuario");
-			idRest  = extras.getString("idRest");
-			idCliente = extras.getString("idCliente");
-			Cliente_email  = extras.getString("Cliente_email");//usuario
-
-
-		}else{
-			usuario="error";
-			idRest="error";
-			idCliente = "error";
-			Cliente_email ="error";
-		}///
-
+	
 		n = (TextView) findViewById(R.id.nr);
 		t = (TextView) findViewById(R.id.tr);
 		d = (TextView) findViewById(R.id.dr);
@@ -114,7 +78,7 @@ public class infoRestaurantes extends Activity implements OnRatingBarChangeListe
 		new Loadrest().execute();
 		
 		perfilUsuaio = (TextView) findViewById(R.id.nombreCliente);
-		perfilUsuaio.setText(usuario);
+		perfilUsuaio.setText(UserData.Cliente_email);
 		
 		
 		perfil = (TextView) findViewById(R.id.perfilInfoRest);
@@ -125,8 +89,6 @@ public class infoRestaurantes extends Activity implements OnRatingBarChangeListe
 
 
 				Intent i = new Intent(getApplicationContext(), perfilCliente.class);
-				i.putExtra("usuario",usuario);
-				i.putExtra("idCliente",idCliente);
 				startActivity(i);
 
 				//finish();
@@ -142,15 +104,7 @@ public class infoRestaurantes extends Activity implements OnRatingBarChangeListe
 			public void onClick(View v) {
 
 
-		//		Intent i = new Intent(getApplicationContext(), listaPlatos2.class);
 				Intent i = new Intent(getApplicationContext(), Productos.class);
-				i.putExtra("idRest", idRest);
-				i.putExtra("usuario",usuario);
-				i.putExtra("mailRest", email);
-				i.putExtra("direccionRest",direccion);
-				i.putExtra("idCliente",idCliente);
-				i.putExtra("Cliente_email",Cliente_email);
-				Toast.makeText(getApplicationContext(), idCliente, Toast.LENGTH_LONG).show();
 				startActivity(i);
 
 				//finish();
@@ -179,27 +133,27 @@ public class infoRestaurantes extends Activity implements OnRatingBarChangeListe
 		protected String doInBackground(String... args) {
 
 			List<NameValuePair> params = new ArrayList<NameValuePair>();
-			params.add(new BasicNameValuePair("buscar", idRest));
+			params.add(new BasicNameValuePair("buscar", UserData.Rest_nombre));
 
 			JSONObject json = jParser.makeHttpRequest(url_all_inforest, "POST", params);
 
 			Log.d("All restaurantes: ", json.toString());
 
 			try {
-				int success = json.getInt(TAG_SUCCESS);
+				int success = json.getInt(UserData.TAG_SUCCESS);
 
 				if (success == 1) {
-					rest = json.getJSONArray(TAG_restaurant);
+					rest = json.getJSONArray(UserData.TAG_restaurant);
 
 					for (int i = 0; i < rest.length(); i++) {
 						JSONObject c = rest.getJSONObject(i);
 
-						id = c.getString(TAG_ID);
-						nombre = c.getString(TAG_NOMBRE);
-						tipo = c.getString(TAG_TIPO);
-						descripcion = c.getString(TAG_DESCRIPCION);
-						email = c.getString(TAG_EMAIL);
-						direccion = c.getString(TAG_DIRECCION);
+						UserData.idRestaurant = c.getString(UserData.TAG_ID_REST);
+						UserData.Rest_nombre = c.getString(UserData.TAG_NOMBRE_REST);
+						UserData.Rest_tipo = c.getString(UserData.TAG_TIPO_REST);
+						UserData.Rest_descripcion = c.getString(UserData.TAG_DESCRIPCION_REST);
+						UserData.Rest_email = c.getString(UserData.TAG_EMAIL_REST);
+						UserData.Rest_direccion = c.getString(UserData.TAG_DIRECCION_REST);
 						//caracteristicas = c.getString(TAG_CARACTERISTICAS);
 					}
 				} else {
@@ -220,16 +174,16 @@ public class infoRestaurantes extends Activity implements OnRatingBarChangeListe
 		protected void onPostExecute(String file_url) {
 			pDialog.dismiss();
 
-			n.setText(nombre);
-			t.setText(tipo);
-			d.setText(descripcion);
+			n.setText(UserData.Rest_nombre);
+			t.setText(UserData.Rest_tipo);
+			d.setText(UserData.Rest_descripcion);
 			//c.setText(caracteristicas);
 			RatingBar rating = (RatingBar) findViewById(R.id.ratingBar1);
 			if(UserData.ratings == null){
 				UserData.ratings = new HashMap<String, Float>();
 			}
-			if(UserData.ratings.containsKey(nombre)){
-				rating.setRating(UserData.ratings.get(nombre));
+			if(UserData.ratings.containsKey(UserData.Rest_nombre)){
+				rating.setRating(UserData.ratings.get(UserData.Rest_nombre));
 			}
 		}
 
@@ -241,18 +195,18 @@ public class infoRestaurantes extends Activity implements OnRatingBarChangeListe
 			UserData.ratings = new HashMap<String, Float>();
 		}
 		RatingBar rating = (RatingBar) findViewById(R.id.ratingBar1);
-		if(UserData.ratings.containsKey(nombre)){
-			rating.setRating(UserData.ratings.get(nombre));
+		if(UserData.ratings.containsKey(UserData.Rest_nombre)){
+			rating.setRating(UserData.ratings.get(UserData.Rest_nombre));
 		}
-		System.out.print(nombre);
+		System.out.print(UserData.Rest_nombre);
 	}
 
     public void onRatingChanged(RatingBar rating, float ratingValue, boolean fromTouch) {
-        if(UserData.ratings.containsKey(nombre)){
-        	UserData.ratings.remove(nombre);
+        if(UserData.ratings.containsKey(UserData.Rest_nombre)){
+        	UserData.ratings.remove(UserData.Rest_nombre);
 		}
 		HashMap<String,Float> map = new HashMap<String, Float>();
-		UserData.ratings.put(nombre, rating.getRating());
+		UserData.ratings.put(UserData.Rest_nombre, rating.getRating());
     }
 
 

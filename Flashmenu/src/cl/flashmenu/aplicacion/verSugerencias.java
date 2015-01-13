@@ -1,7 +1,6 @@
 package cl.flashmenu.aplicacion;
 
 import java.text.DecimalFormat;
-import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -17,93 +16,51 @@ import cl.flashmenu.aplicacion.R;
 import cl.flashmenu.aplicacion.UserData;
 import cl.flashmenu.aplicacion.servidor;
 import cl.flashmenu.aplicacion.verMapa;
-import cl.flashmenu.aplicacion.verMapa.getPreferencias;
 import cliente.perfilCliente;
 
 
 import android.app.ListActivity;
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.AdapterView.OnItemSelectedListener;
-import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.RelativeLayout;
 import android.widget.SimpleAdapter;
-import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 public class verSugerencias extends ListActivity{
 
 	// Progress Dialog
 	private ProgressDialog pDialog;
 
-	//recibidos por intent
-	String usuario, idRest, mailRest, direccionRest, idCliente, Cliente_email;
-
-
-	String idRestaurant, nombreP, descripcionP, precioP;
-
-	String email_rest ,nombre_rest ,tipo_rest,direccion_rest; 
-
 	String n, d, p, idd;
 
-	TextView nn, dd, pp, totalEnCarta;
-
-	TextView perfil, cerrar, perfilTitulo;
-	ImageView imagen;
-	RadioButton rb;
+	TextView perfil, cerrar, perfilTitulo, perfilUsuario;
 
 	// Creating JSON Parser object
 	JSONParser jParser = new JSONParser();
 
-	ArrayList<HashMap<String, Object>> PlatosList;
+	ArrayList<HashMap<String, Object>> SuegerenciasList;
 	ArrayList<HashMap<String, Object>> DatosPlatos;
 	DecimalFormat fmt;
 	private static String url_Lista_platos = servidor.ip() + servidor.ruta2()+"verSugerencias.php";
-	private static String url_all_getRest = servidor.ip() + servidor.ruta2()+"redtaurantes.php";
+	private static String url_all_getRest = servidor.ip() + servidor.ruta2()+"restaurantes.php";
 
 	// JSON Node names
-	public static final String TAG_SUCCESS = "success";
-	public static final String TAG_platos = "Producto";
-	public static final String TAG_NOMBRE = "Producto_nombre";
-	public static final String TAG_DESCRIPCION = "Producto_descripcion";
-	public static final String TAG_PRECIO = "Producto_precio";
-	//public static final String TAG_TIPO = "Producto_tipo";
-	public static final String TAG_ID = "Restaurant_idRestaurant";
-	public static final String TAG_SPINNER = "Restaurant_spinner";
-	public static final String TAG_POSITION = "Position_Lista";
-	public static final String TAG_CANTIDAD = "cantidad";
-
-
-
-
-	private static final String TAG_IDREST = "idRestaurant";
-	private static final String TAG_NOMBREREST = "Rest_nombre";
-	private static final String TAG_TIPOREST = "Rest_tipo";
-	private static final String TAG_DESCRIPCIONREST = "Rest_descripcion";
-	private static final String TAG_EMAILREST = "Rest_email";
-	private static final String TAG_DIRECCIONREST = "Rest_direccion";
-	private static final String TAG_restaurant = "restaurant";
-
-
 	JSONArray j1 = null;
 
-	String preferencias_tipo; 
-	TextView perfilUsuario;
+	String preferencias_tipo;
 
 	// JSONArray
-	JSONArray platosl = null;
+	JSONArray sugerencias = null;
 
 	@SuppressWarnings("unchecked")
 	@Override
@@ -111,26 +68,14 @@ public class verSugerencias extends ListActivity{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.lista2); 
 
-
-		//RECIBIR DATOS POR INTENT
-		Bundle extras = getIntent().getExtras();
-		if (extras != null) {
-
-			usuario  = extras.getString("usuario");
-			idCliente = extras.getString("idCliente");
-			Cliente_email = extras.getString("Cliente_email");
-
-		}else{
-			usuario="error";
-			idCliente = "error";
-			Cliente_email = "error";
-		}///
 		
-		perfilUsuario = (TextView) findViewById(R.id.nombreClienteMapa);
-		perfilUsuario.setText(usuario);
+		perfilUsuario = (TextView) findViewById(R.id.nombreClienteLISTA2);
+		perfilUsuario.setText(UserData.Cliente_email);
+		
+		perfilTitulo = (TextView) findViewById(R.id.titulolista2);
+		perfilTitulo.setText("Sugerencias");
 
-
-		perfil = (TextView) findViewById(R.id.perfilInfoRestMapa);
+		perfil = (TextView) findViewById(R.id.perfilInfoRest2);
 		perfil.setOnClickListener(new View.OnClickListener() {
 
 			@Override
@@ -138,30 +83,27 @@ public class verSugerencias extends ListActivity{
 
 
 				Intent i = new Intent(getApplicationContext(), perfilCliente.class);
-				i.putExtra("usuario",usuario);
-				i.putExtra("idCliente",idCliente);
 				startActivity(i);
 
 				//finish();
 			}
 		});
-		perfilTitulo = (TextView) findViewById(R.id.nombreClienteMapa);
-		perfilTitulo.setText("Sugerencias");
+		
 
 
 		String columna;
 		if(UserData.lista_preferencias_tipo.size() > 1){
-			columna = getColumnName((String)((HashMap<String, Object>)UserData.lista_preferencias_tipo.get(0)).get(verMapa.TAG_PREFERENCIAS_TIPO_NOMBRE));
-			preferencias_tipo = columna + " = '" + ((HashMap<String, Object>)UserData.lista_preferencias_tipo.get(0)).get(verMapa.TAG_PREFERENCIAS_TIPO_VALOR) + "'";
+			columna = getColumnName((String)((HashMap<String, Object>)UserData.lista_preferencias_tipo.get(0)).get(UserData.TAG_PREFERENCIAS_TIPO_NOMBRE));
+			preferencias_tipo = columna + " = '" + ((HashMap<String, Object>)UserData.lista_preferencias_tipo.get(0)).get(UserData.TAG_PREFERENCIAS_TIPO_VALOR) + "'";
 
 			for(int i = 1; i<UserData.lista_preferencias_tipo.size(); i++){
-				columna = getColumnName((String)((HashMap<String, Object>)UserData.lista_preferencias_tipo.get(i)).get(verMapa.TAG_PREFERENCIAS_TIPO_NOMBRE));
-				preferencias_tipo += " OR " + columna + " = '" +((HashMap<String, Object>)UserData.lista_preferencias_tipo.get(i)).get(verMapa.TAG_PREFERENCIAS_TIPO_VALOR) + "'";
+				columna = getColumnName((String)((HashMap<String, Object>)UserData.lista_preferencias_tipo.get(i)).get(UserData.TAG_PREFERENCIAS_TIPO_NOMBRE));
+				preferencias_tipo += " OR " + columna + " = '" +((HashMap<String, Object>)UserData.lista_preferencias_tipo.get(i)).get(UserData.TAG_PREFERENCIAS_TIPO_VALOR) + "'";
 			}
 		}
 		else if(UserData.lista_preferencias_tipo.size() == 1){
-			columna = getColumnName((String)((HashMap<String, Object>)UserData.lista_preferencias_tipo.get(0)).get(verMapa.TAG_PREFERENCIAS_TIPO_NOMBRE));
-			preferencias_tipo = columna + " = '" + ((HashMap<String, Object>)UserData.lista_preferencias_tipo.get(0)).get(verMapa.TAG_PREFERENCIAS_TIPO_VALOR) + "'";
+			columna = getColumnName((String)((HashMap<String, Object>)UserData.lista_preferencias_tipo.get(0)).get(UserData.TAG_PREFERENCIAS_TIPO_NOMBRE));
+			preferencias_tipo = columna + " = '" + ((HashMap<String, Object>)UserData.lista_preferencias_tipo.get(0)).get(UserData.TAG_PREFERENCIAS_TIPO_VALOR) + "'";
 		}
 		else 
 			preferencias_tipo = "";
@@ -172,7 +114,7 @@ public class verSugerencias extends ListActivity{
 
 
 		// Hashmap for ListView
-		PlatosList = new ArrayList<HashMap<String, Object>>();;
+		SuegerenciasList = new ArrayList<HashMap<String, Object>>();;
 
 
 		// Get listview
@@ -187,31 +129,29 @@ public class verSugerencias extends ListActivity{
 
 				HashMap<String, Object> elemento = (HashMap<String, Object>)getListAdapter().getItem(position);
 				RelativeLayout textView = (RelativeLayout)getListAdapter().getView(position, view, parent);
-				//nn = ((TextView) elemento.get(TAG_NOMBRE));
-				//dd = ((TextView) elemento.get(TAG_DESCRIPCION));
-				//pp = ((TextView) elemento.get(TAG_PRECIO));
 
-				n = (String)elemento.get(TAG_NOMBRE);
-				d = (String)elemento.get(TAG_DESCRIPCION);
-				p = (String)elemento.get(TAG_PRECIO);
-				idd = (String)elemento.get(TAG_ID);
+				n = (String)elemento.get(UserData.TAG_NOMBRE_PRODUCTO);
+				d = (String)elemento.get(UserData.TAG_DESCRIPCION_PRODUCTO);
+				p = (String)elemento.get(UserData.TAG_PRECIO_PRODUCTO);
+				UserData.idRestaurant = (String)elemento.get(UserData.TAG_ID_PRODUCTO);
+				new getRest().execute();
 
 				HashMap<String, Object> map = new HashMap<String, Object>();
-				map.put(TAG_NOMBRE, n);
-				map.put(TAG_DESCRIPCION, d);
-				map.put(TAG_PRECIO, p);
-				map.put(TAG_ID, idd);
-				map.put(TAG_POSITION, position);
+				map.put(UserData.TAG_NOMBRE_PRODUCTO, n);
+				map.put(UserData.TAG_DESCRIPCION_PRODUCTO, d);
+				map.put(UserData.TAG_PRECIO_PRODUCTO, p);
+				map.put(UserData.TAG_ID_PRODUCTO, UserData.idRestaurant);
+				map.put(UserData.TAG_POSITION_PRODUCTO, position);
 
 
 				Intent i = new Intent(getApplicationContext(), Productos.class);
-				i.putExtra("idRest", idd);
-				i.putExtra("usuario", usuario);
-				i.putExtra("mailRest", email_rest);
-				i.putExtra("direccionRest", direccion_rest);
-				i.putExtra("idCliente", idCliente);
-				i.putExtra("Cliente_email", Cliente_email);
-				i.putExtra("nombre_rest", nombre_rest);
+//				i.putExtra("idRest", idd);
+//				i.putExtra("usuario", usuario);
+//				i.putExtra("mailRest", email_rest);
+//				i.putExtra("direccionRest", direccion_rest);
+//				i.putExtra("idCliente", UserData.idCliente);
+//				i.putExtra("Cliente_email",UserData.Cliente_email);
+//				i.putExtra("nombre_rest", nombre_rest);
 
 
 				startActivity(i);
@@ -273,37 +213,38 @@ public class verSugerencias extends ListActivity{
 
 			try {
 				// Checking for SUCCESS TAG
-				int success = json.getInt(TAG_SUCCESS);
+				int success = json.getInt(UserData.TAG_SUCCESS);
 
 				if (success == 1) {
 
-					platosl = json.getJSONArray(TAG_platos);
+					sugerencias = json.getJSONArray(UserData.TAG_producto);
 
-					for (int i = 0; i < platosl.length(); i++) {
-						JSONObject c = platosl.getJSONObject(i);
+					for (int i = 0; i < sugerencias.length(); i++) {
+						JSONObject c = sugerencias.getJSONObject(i);
 
 
-						nombreP = c.getString(TAG_NOMBRE);
-						descripcionP = c.getString(TAG_DESCRIPCION);
-						precioP = c.getString(TAG_PRECIO);
-						idRestaurant = c.getString(TAG_ID);
+						UserData.SProducto_nombre = c.getString(UserData.TAG_NOMBRE_PRODUCTO);
+						UserData.SProducto_descripcion = c.getString(UserData.TAG_DESCRIPCION_PRODUCTO);
+						UserData.SProducto_precio = c.getString(UserData.TAG_PRECIO_PRODUCTO);
+						UserData.SProducto_tipo	= c.getString(UserData.TAG_TIPO_PRODUCTO);
+						UserData.SProducto_tipo_preferencia= c.getString(UserData.TAG_TIPO_PREFERENCIAS_PRODUCTO);
+						UserData.sRestaurant_idRestaurant = c.getString(UserData.TAG_ID_PRODUCTO);
 
 
 						// creating new HashMap
 						HashMap<String, Object> map = new HashMap<String, Object>();
 
 
-						map.put(TAG_NOMBRE, nombreP);
-						map.put(TAG_DESCRIPCION, descripcionP);
-						map.put(TAG_PRECIO, precioP);
-						map.put(TAG_ID, idRestaurant);
-						//Spinner newSpinner = new Spinner(listaPlatos2.this);
-						//DatosPorDefecto2(newSpinner);
-						//map.put(TAG_SPINNER, null);
-
+						map.put(UserData.TAG_NOMBRE_PRODUCTO, UserData.SProducto_nombre);
+						map.put(UserData.TAG_DESCRIPCION_PRODUCTO, UserData.SProducto_descripcion);
+						map.put(UserData.TAG_PRECIO_PRODUCTO, UserData.SProducto_precio);
+						map.put(UserData.TAG_TIPO_PRODUCTO, UserData.SProducto_tipo) ;
+						map.put(UserData.TAG_TIPO_PREFERENCIAS_PRODUCTO, UserData.SProducto_tipo_preferencia);
+						map.put(UserData.TAG_ID_PRODUCTO, UserData.sRestaurant_idRestaurant);
+						
 
 						// adding HashList to ArrayList
-						PlatosList.add(map);
+						SuegerenciasList.add(map);
 					}
 				} else {
 
@@ -331,61 +272,42 @@ public class verSugerencias extends ListActivity{
 					 * Updating parsed JSON data into ListView
 					 * */
 					ListAdapter adapter = new SimpleAdapter(
-							verSugerencias.this, PlatosList, R.layout.list_itemplatos,
-							new String[] { TAG_NOMBRE, TAG_DESCRIPCION, TAG_PRECIO, TAG_CANTIDAD}, new int[] {R.id.nombrePlato, R.id.descripcionPlato, R.id.precioPlato, R.id.cantidadPlatosSeleccionados});
+							verSugerencias.this, SuegerenciasList, R.layout.list_itemplatos,
+							new String[] { UserData.TAG_NOMBRE_PRODUCTO, UserData.TAG_DESCRIPCION_PRODUCTO, UserData.TAG_PRECIO_PRODUCTO, UserData.TAG_CANTIDAD_PRODUCTO}, new int[] {R.id.nombrePlato, R.id.descripcionPlato, R.id.precioPlato, R.id.cantidadPlatosSeleccionados});
 
-					//new String[] { TAG_NOMBRE, TAG_DESCRIPCION, TAG_PRECIO,TAG_SPINNER }, new int[] {R.id.nombrePlato, R.id.descripcionPlato, R.id.precioPlato, R.id.spinnerPlato});
-
+					
 					// updating listview
 					setListAdapter(adapter);
-					//HashMap<String, Object> adapterData;
-					//adapterData = (HashMap<String,Object>)adapter.getItem(4);
-					//DatosPorDefecto2((Spinner)adapterData.get(TAG_SPINNER));
 				}
 			});
-
-
 		}
-
 	}
-
-
 
 
 	public class getRest extends AsyncTask<String, String, String> {
 		protected String doInBackground(String... args) {
 
 			List<NameValuePair> params = new ArrayList<NameValuePair>();
-			params.add(new BasicNameValuePair("buscar", idRest));
+			params.add(new BasicNameValuePair("buscar", UserData.idRestaurant));
 
 			JSONObject json = jParser.makeHttpRequest(url_all_getRest, "POST", params);
 
 			Log.d("All : cliente", json.toString());
 
 			try {
-				int success = json.getInt(TAG_SUCCESS);
+				int success = json.getInt(UserData.TAG_SUCCESS);
 
 				if (success == 1) {
-					j1 = json.getJSONArray(TAG_restaurant);
+					j1 = json.getJSONArray(UserData.TAG_restaurant);
 
 					for (int i = 0; i < j1.length(); i++) {
 						JSONObject c = j1.getJSONObject(i);
 
-						//						idCliente = c.getString(TAG_ID);
-						//						Cliente_email = c.getString(TAG_EMAIL);
-						//						Cliente_nombre  = c.getString(TAG_NOMBRE);
-						//						Cliente_apellidoPaterno	 = c.getString(TAG_APELLIDOP);
-						//						Cliente_apellidoMaterno = c.getString(TAG_APELLIDOM);
-						//						Cliente_rut	 = c.getString(TAG_RUT);
-						//						Cliente_direccion = c.getString(TAG_DIRECCION);
-
-
-						email_rest = c.getString(TAG_EMAILREST);
-						nombre_rest  = c.getString(TAG_NOMBREREST);
-						tipo_rest	 = c.getString(TAG_TIPOREST);
-						direccion_rest = c.getString(TAG_DIRECCIONREST);
+						UserData.Rest_email = c.getString(UserData.TAG_EMAIL_REST);
+						UserData.Rest_nombre  = c.getString(UserData.TAG_NOMBRE_REST);
+						UserData.Rest_tipo	 = c.getString(UserData.TAG_TIPO_REST);
+						UserData.Rest_direccion = c.getString(UserData.TAG_DIRECCION_REST);
 					}
-
 
 				} else {
 

@@ -2,6 +2,8 @@ package cliente;
 
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
@@ -10,7 +12,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import cl.flashmenu.aplicacion.Coneccion;
+import cl.flashmenu.aplicacion.JSONParser;
 import cl.flashmenu.aplicacion.R;
+import cl.flashmenu.aplicacion.UserData;
 import cl.flashmenu.aplicacion.servidor;
 import cl.flashmenu.aplicacion.verMapa;
 import android.os.AsyncTask;
@@ -36,11 +40,25 @@ public class inicioSesionCliente extends Activity {
 
 	EditText nombre,clave;
 	Button entrar;
-
+	String user,pass;
 	Coneccion post;
 	TextView creC;
+	
 
+	JSONParser jParser = new JSONParser();
+	JSONArray j1 = null;
+	JSONArray j2 = null;
+	
+	////URLS
+	private static String url_all_inforest = servidor.ip() +servidor.ruta2() + "getCliente.php";
+	private static String url_all_getPreferencias = servidor.ip() +servidor.ruta2() + "getPreferencias.php";
+	private static String url_all_getPreferencias_tipo = servidor.ip() +servidor.ruta2() + "getPreferencias_tipo.php";
 	private static String URL_connect = servidor.ip() + servidor.ruta2() + "iniciarSesionCliente.php";
+	
+
+	ArrayList<HashMap<String, Object>> PlatosList;
+	HashMap<String, Object> map = new HashMap<String, Object>();
+
 
 	private ProgressDialog pDialog;
 
@@ -48,7 +66,8 @@ public class inicioSesionCliente extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.iniciosesioncliente);
-
+		
+		UserData.initall();
 		post=new Coneccion();
 
 		nombre = (EditText) findViewById(R.id.iniciarEmail1);
@@ -64,14 +83,11 @@ public class inicioSesionCliente extends Activity {
 				if(checklogindata(usuario, pass) == true){        			
 					new asynclogin().execute(usuario,pass); 
 
-
-
 				}else{
 					err_login();
 				}
 			}
 		});
-
 
 
 
@@ -149,7 +165,7 @@ public class inicioSesionCliente extends Activity {
 
 
 	class asynclogin extends AsyncTask< String, String, String > {
-		String user,pass;
+		
 		protected void onPreExecute() {
 			//para el progress dialog
 			pDialog = new ProgressDialog(inicioSesionCliente.this);
@@ -165,7 +181,8 @@ public class inicioSesionCliente extends Activity {
 			pass=params[1];
 
 			//enviamos y recibimos y analizamos los datos en segundo plano.
-			if (loginstatus(user,pass)==true){    		    		
+			if (loginstatus(user,pass)==true){
+				
 				return "ok"; //login valido
 			}else{    		
 				return "err"; //login invalido     	          	  
@@ -179,14 +196,14 @@ public class inicioSesionCliente extends Activity {
 			pDialog.dismiss();//ocultamos progess dialog.
 			Log.e("onPostExecute=",""+result);
 			if (result.equals("ok")){
-
+				new getID().execute();
 				Toast toast1 = Toast.makeText(getApplicationContext(),"Bienvenido: "+user, Toast.LENGTH_SHORT);
 				toast1.show();
 
 
 
 				Intent i = new Intent(inicioSesionCliente.this, verMapa.class);
-				i.putExtra("usuario",user);
+				//i.putExtra("usuario",user);
 				startActivity(i); 
 
 				//   	finish();
@@ -198,6 +215,139 @@ public class inicioSesionCliente extends Activity {
 		}//onPostExecute
 
 	}//asyncLogin
+	
+	
+	
+	public class getID extends AsyncTask<String, String, String> {
+		protected String doInBackground(String... args) {
+
+			List<NameValuePair> params = new ArrayList<NameValuePair>();
+			params.add(new BasicNameValuePair("buscar", user));
+
+			JSONObject json = jParser.makeHttpRequest(url_all_inforest, "POST", params);
+
+			Log.d("All : cliente", json.toString());
+
+			try {
+				int success = json.getInt(UserData.TAG_SUCCESS);
+
+				if (success == 1) {
+					j1 = json.getJSONArray(UserData.TAG_cliente);
+
+					for (int i = 0; i < j1.length(); i++) {
+						JSONObject c = j1.getJSONObject(i);
+
+						UserData.idCliente = c.getString(UserData.TAG_ID_CLIENTE);
+						UserData.Cliente_email = c.getString(UserData.TAG_EMAIL_CLIENTE);
+						UserData.Cliente_nombre  = c.getString(UserData.TAG_NOMBRE_CLIENTE);
+						UserData.Cliente_apellidoPaterno	 = c.getString(UserData.TAG_APELLIDOP_CLIENTE);
+						UserData.Cliente_apellidoMaterno = c.getString(UserData.TAG_APELLIDOM_CLIENTE);
+						UserData.Cliente_rut	 = c.getString(UserData.TAG_RUT_CLIENTE);
+						UserData.Cliente_direccion = c.getString(UserData.TAG_DIRECCION_CLIENTE);
+					}
+
+					new getPreferencias().execute();
+				} else {
+
+				}
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
+
+			return null;
+		}
+	}
+
+	public class getPreferencias extends AsyncTask<String, String, String> {
+		protected String doInBackground(String... args) {
+
+			List<NameValuePair> params = new ArrayList<NameValuePair>();
+			params.add(new BasicNameValuePair("buscar", UserData.idCliente));
+
+			JSONObject json = jParser.makeHttpRequest(url_all_getPreferencias, "POST", params);
+
+			Log.d("All : Preferencias", json.toString());
+
+			try {
+				int success = json.getInt(UserData.TAG_SUCCESS);
+
+				if (success == 1) {
+					j2 = json.getJSONArray(UserData.TAG_PREFERENCIAS);
+
+					for (int i = 0; i < j2.length(); i++) {
+						JSONObject c = j2.getJSONObject(i);
+						map= new HashMap<String, Object>();
+						if( i == 0)
+							UserData.tipo_preferencia =  "idPreferencia_tipo = '" + c.getString(UserData.TAG_TIPO_PREFERENCIAS) + "'";
+						else{
+							UserData.tipo_preferencia += " OR idPreferencia_tipo = '" + c.getString(UserData.TAG_TIPO_PREFERENCIAS) + "'"; 
+						}
+						map.put(UserData.TAG_TIPO_PREFERENCIAS, c.getString(UserData.TAG_TIPO_PREFERENCIAS));
+
+
+						// adding HashList to ArrayList
+						UserData.lista_preferencias.add(map);
+						System.out.println("pref: " + UserData.lista_preferencias.toString());
+					}
+
+
+					new getPreferencias_tipo().execute();
+				} else {
+
+				}
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
+
+			return null;
+		}
+	}
+
+
+
+	public class getPreferencias_tipo extends AsyncTask<String, String, String> {
+		protected String doInBackground(String... args) {
+
+			List<NameValuePair> params = new ArrayList<NameValuePair>();
+			params.add(new BasicNameValuePair("buscar", UserData.tipo_preferencia));
+			System.out.println("Tipo Pref: " + UserData.tipo_preferencia);
+			JSONObject json = jParser.makeHttpRequest(url_all_getPreferencias_tipo, "POST", params);
+
+			Log.d("All : Preferencias", json.toString());
+
+			try {
+				int success = json.getInt(UserData.TAG_SUCCESS);
+
+				if (success == 1) {
+					j2 = json.getJSONArray(UserData.TAG_preferencia_tipo);
+					for (int i = 0; i < j2.length(); i++) {
+						map= new HashMap<String, Object>();
+						JSONObject c = j2.getJSONObject(i);
+
+						UserData.Preferencia_tipo_nombre = c.getString(UserData.TAG_PREFERENCIAS_TIPO_NOMBRE);
+						UserData.Preferencia_tipo_valor = c.getString(UserData.TAG_PREFERENCIAS_TIPO_VALOR);
+
+
+						map.put(UserData.TAG_PREFERENCIAS_TIPO_NOMBRE, c.getString(UserData.TAG_PREFERENCIAS_TIPO_NOMBRE));
+						map.put(UserData.TAG_PREFERENCIAS_TIPO_VALOR, c.getString(UserData.TAG_PREFERENCIAS_TIPO_VALOR));
+
+						// adding HashList to ArrayList
+						UserData.lista_preferencias_tipo.add(map);
+						System.out.println(UserData.lista_preferencias_tipo.toString());
+					}
+				} else {
+
+				}
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
+
+			return null;
+		}
+	}
+	
+	
+	
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) 
@@ -220,22 +370,4 @@ public class inicioSesionCliente extends Activity {
 		}
 		return false;
 	}
-
-
-	//--------- menu ----------------------------
-
-
-
-
-	//Definimos que para cuando se presione la tecla BACK no volvamos para atras  	 
-	/* @Override
-	 public boolean onKeyDown(int keyCode, KeyEvent event)  {
-	     if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
-	         // no hacemos nada.
-	         return true;
-	     }
-
-	     return super.onKeyDown(keyCode, event);
-	 }*/
-
 }

@@ -49,10 +49,11 @@
             android:id="@+id/map"
             android:name="com.google.android.gms.maps.SupportMapFragment"
             android:layout_width="match_parent"
-            android:layout_height="408dp" />
+            android:layout_height="422dp" />
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/linearLayout2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/linearLayout1"
@@ -60,16 +61,17 @@
         android:layout_alignRight="@+id/linearLayout1"
         android:layout_below="@+id/linearLayout1"
         android:orientation="vertical" >
-
-        <Button
-            android:id="@+id/verSugerencia"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-             android:background="#0DC03D"
-            android:text="Ver sugerencias"
-            android:textColor="#FFFFFF"
-            android:textSize="25sp" />
-
     </LinearLayout>
+
+    <Button
+        android:id="@+id/verSugerencia"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/linearLayout2"
+        android:layout_alignParentBottom="true"
+        android:background="#0DC03D"
+        android:text="Ver sugerencias"
+        android:textColor="#FFFFFF"
+        android:textSize="25sp" />
 
 </RelativeLayout>

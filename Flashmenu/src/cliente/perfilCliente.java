@@ -18,27 +18,12 @@ import android.widget.Button;
 public class perfilCliente extends Activity {
 
 	Button  modificarCli, verReservas, volverMapa, cerrarSesion, preferencias;
-	String usuario, idCliente;
+	
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.perfilcliente);
-		
-		
-		
-		//RECIBIR DATOS POR INTENT
-		Bundle extras = getIntent().getExtras();
-		if (extras != null) {
-
-			usuario  = extras.getString("usuario");//
-			idCliente = extras.getString("idCliente");
-
-
-		}else{
-			usuario="error";
-			idCliente = "error";
-		}///
 		
 		
 		modificarCli = (Button) findViewById(R.id.modifDatos);
@@ -48,8 +33,6 @@ public class perfilCliente extends Activity {
 			public void onClick(View v) {
 				
 				Intent i = new Intent(getApplicationContext(), modificarCliente.class);
-				i.putExtra("idCliente", idCliente);
-				i.putExtra("usuario", usuario);
 				startActivity(i);
 
 				//finish();
@@ -63,8 +46,6 @@ public class perfilCliente extends Activity {
 			public void onClick(View v) {
 				
 				Intent i = new Intent(getApplicationContext(), VerReserva.class);
-				i.putExtra("idCliente", idCliente);
-				i.putExtra("usuario", usuario);
 				startActivity(i);
 
 				//finish();
@@ -78,8 +59,6 @@ public class perfilCliente extends Activity {
 			public void onClick(View v) {
 				
 				Intent i = new Intent(getApplicationContext(), verMapa.class);
-				//i.putExtra("idCliente", idCliente);
-				i.putExtra("usuario", usuario);
 				startActivity(i);
 
 				//finish();
@@ -111,12 +90,6 @@ public class perfilCliente extends Activity {
 				//finish();
 			}
 		});
-
-
-		
-		
-		
-		
 	}
 
 	@Override

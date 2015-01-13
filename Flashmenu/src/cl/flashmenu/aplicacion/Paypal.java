@@ -71,7 +71,7 @@ public class Paypal extends Activity {
 	private static final int REQUEST_CODE_PROFILE_SHARING = 3;
 
 	//desde intent
-	String idRest, usuario, mailRest, direccionRest, hora, fecha, idCliente, Cliente_email, mesa;
+	//String idRest, usuario, mailRest, direccionRest, hora, fecha, idCliente, Cliente_email, mesa;
 	TextView perfil, cerrar , perfilUsuario;
 
 	TextView f, h, d, detallePro, totalPro;
@@ -117,43 +117,9 @@ public class Paypal extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.paypal);
 
-		//RECIBIR DATOS POR INTENT
-		Bundle extras = getIntent().getExtras();
-		if (extras != null) {
-			fecha  = extras.getString("fecha");//
-			hora  = extras.getString("hora");//
-			idRest  = extras.getString("idRest");//
-			usuario  = extras.getString("usuario");//
-			mailRest  = extras.getString("mailRest");//
-			direccionRest  = extras.getString("direccionRest");//
-			idCliente = extras.getString("idCliente");
-			Cliente_email = extras.getString("Cliente_email");
-			mesa = extras.getString("mesa");
-
-		}else{
-			fecha="error";
-			hora="error";
-			idRest="error";
-			usuario="error";
-			mailRest="error";
-			direccionRest="error";
-			idCliente = "error";
-			Cliente_email = "error";
-			mesa = "error";
-		}///
-				Toast.makeText(getApplicationContext(), "cli email: "+usuario, Toast.LENGTH_LONG).show();
-				Toast.makeText(getApplicationContext(), "id cli: "+idCliente, Toast.LENGTH_LONG).show();
-				Toast.makeText(getApplicationContext(), "mesa: "+mesa, Toast.LENGTH_LONG).show();
-				Toast.makeText(getApplicationContext(),"fecha: " + fecha, Toast.LENGTH_LONG).show();
-				Toast.makeText(getApplicationContext(),"hora: "+ hora, Toast.LENGTH_LONG).show();
-				Toast.makeText(getApplicationContext(),"dir: " + direccionRest, Toast.LENGTH_LONG).show();
-				Toast.makeText(getApplicationContext(),"mail rest: "+ mailRest, Toast.LENGTH_LONG).show();
-
-
-
 
 		perfilUsuario = (TextView) findViewById(R.id.nombreClientePAYPAL);
-		perfilUsuario.setText(usuario);		
+		perfilUsuario.setText(UserData.Cliente_email);		
 		perfil = (TextView) findViewById(R.id.perfilPayPal);
 		perfil.setOnClickListener(new View.OnClickListener() {
 
@@ -163,8 +129,6 @@ public class Paypal extends Activity {
 
 
 				Intent i = new Intent(getApplicationContext(), perfilCliente.class);
-				i.putExtra("usuario",usuario);
-				i.putExtra("idCliente",idCliente);
 				startActivity(i);
 
 				//finish();
@@ -190,9 +154,9 @@ public class Paypal extends Activity {
 		d = ((TextView) findViewById(R.id.detalledireccion));
 		detallePro = (TextView) findViewById(R.id.detalleproductosComprados);
 		totalPro = (TextView) findViewById(R.id.totalcompra);
-		f.setText(fecha);
-		h.setText(hora);
-		d.setText(direccionRest);
+		f.setText(UserData.Horarios_mesa_fecha);
+		h.setText(UserData.Horarios_mesa_hora);
+		d.setText(UserData.Rest_direccion);
 		totalPro.setText("$" + fmt.format((UserData.PrecioPlatos()+UserData.PrecioBebidas()+UserData.PrecioPostres()+UserData.PrecioMenu())));
 		amount = (UserData.PrecioPlatos()+UserData.PrecioBebidas()+UserData.PrecioPostres()+UserData.PrecioMenu());
 
@@ -213,7 +177,7 @@ public class Paypal extends Activity {
 		}*/
 		for(int i=0;i<UserData.lista.size();i++){
 			extract = (HashMap<String, Object>)UserData.lista.get(i);
-			productos += (String)extract.get(listaPlatos2.TAG_NOMBRE) + ": " + "$" + fmt.format(Integer.parseInt((String)extract.get(listaPlatos2.TAG_PRECIO))) + "\n";
+			productos += (String)extract.get(UserData.TAG_NOMBRE_PRODUCTO) + ": " + "$" + fmt.format(Integer.parseInt((String)extract.get(UserData.TAG_PRECIO_PRODUCTO))) + "\n";
 		}
 		UserData.lista.clear();
 		detallePro.setText(productos);
@@ -241,14 +205,14 @@ public class Paypal extends Activity {
 
 			List<NameValuePair> params = new ArrayList<NameValuePair>();
 
-			params.add(new BasicNameValuePair("Reserva_fecha", fecha));
-			params.add(new BasicNameValuePair("Reserva_hora", hora));
+			params.add(new BasicNameValuePair("Reserva_fecha", UserData.Horarios_mesa_fecha));
+			params.add(new BasicNameValuePair("Reserva_hora", UserData.Horarios_mesa_hora));
 			params.add(new BasicNameValuePair("Reserva_total", to));
-			params.add(new BasicNameValuePair("Reserva_direccion", direccionRest));
+			params.add(new BasicNameValuePair("Reserva_direccion", UserData.Rest_direccion));
 			params.add(new BasicNameValuePair("Reserva_detalleProductos", productos));
-			params.add(new BasicNameValuePair("Reserva_email", mailRest));
-			params.add(new BasicNameValuePair("Cliente_idCliente", idCliente));
-			params.add(new BasicNameValuePair("Mesa_Nro_mesa", mesa));
+			params.add(new BasicNameValuePair("Reserva_email", UserData.Rest_email));
+			params.add(new BasicNameValuePair("Cliente_idCliente", UserData.idCliente));
+			params.add(new BasicNameValuePair("Mesa_Nro_mesa", UserData.Mesa_nro));
 
 
 			JSONObject json = jsonParser.makeHttpRequest(url_create_Cliente,"POST", params);
@@ -284,13 +248,13 @@ public class Paypal extends Activity {
 		protected String doInBackground(String... args) {
 
 			List<NameValuePair> params = new ArrayList<NameValuePair>();			
-			params.add(new BasicNameValuePair("Cliente_email", usuario));
-			params.add(new BasicNameValuePair("Rest_email", mailRest));
-			params.add(new BasicNameValuePair("Nro_reserva", mailRest));
-			params.add(new BasicNameValuePair("Hora", hora));
-			params.add(new BasicNameValuePair("Fecha", fecha));
-			params.add(new BasicNameValuePair("Nro_mesa", mesa));
-			params.add(new BasicNameValuePair("Rest_direccion", direccionRest));
+			params.add(new BasicNameValuePair("Cliente_email", UserData.Cliente_email));
+			params.add(new BasicNameValuePair("Rest_email", UserData.Rest_email));
+			params.add(new BasicNameValuePair("Nro_reserva", String.valueOf(LastId)));
+			params.add(new BasicNameValuePair("Hora", UserData.Horarios_mesa_hora));
+			params.add(new BasicNameValuePair("Fecha", UserData.Horarios_mesa_fecha));
+			params.add(new BasicNameValuePair("Nro_mesa", UserData.Mesa_nro));
+			params.add(new BasicNameValuePair("Rest_direccion", UserData.Rest_direccion));
 			params.add(new BasicNameValuePair("idreserva", String.valueOf(LastId)));
 
 			params.add(new BasicNameValuePair("productos", productos));
@@ -329,9 +293,9 @@ public class Paypal extends Activity {
 
 			List<NameValuePair> params = new ArrayList<NameValuePair>();
 
-			params.add(new BasicNameValuePair("buscar1", fecha));
-			params.add(new BasicNameValuePair("buscar2", hora));
-			params.add(new BasicNameValuePair("buscar3", mesa));
+			params.add(new BasicNameValuePair("buscar1", UserData.Horarios_mesa_fecha));
+			params.add(new BasicNameValuePair("buscar2", UserData.Horarios_mesa_hora));
+			params.add(new BasicNameValuePair("buscar3", UserData.Mesa_nro));
 
 
 			JSONObject json = jsonParser.makeHttpRequest(url_borrar_horario_mesa,"POST", params);

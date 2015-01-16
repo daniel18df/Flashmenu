@@ -53,6 +53,7 @@ public class inicioSesionCliente extends Activity {
 	private static String url_all_inforest = servidor.ip() +servidor.ruta2() + "getCliente.php";
 	private static String url_all_getPreferencias = servidor.ip() +servidor.ruta2() + "getPreferencias.php";
 	private static String url_all_getPreferencias_tipo = servidor.ip() +servidor.ruta2() + "getPreferencias_tipo.php";
+	private static String url_all_getHistorial = servidor.ip() +servidor.ruta2() + "getReservasCliente.php";
 	private static String URL_connect = servidor.ip() + servidor.ruta2() + "iniciarSesionCliente.php";
 	
 
@@ -197,6 +198,7 @@ public class inicioSesionCliente extends Activity {
 			Log.e("onPostExecute=",""+result);
 			if (result.equals("ok")){
 				new getID().execute();
+			//	new getHistorial().execute();
 				Toast toast1 = Toast.makeText(getApplicationContext(),"Bienvenido: "+user, Toast.LENGTH_SHORT);
 				toast1.show();
 
@@ -334,6 +336,49 @@ public class inicioSesionCliente extends Activity {
 						// adding HashList to ArrayList
 						UserData.lista_preferencias_tipo.add(map);
 						System.out.println(UserData.lista_preferencias_tipo.toString());
+					}
+				} else {
+
+				}
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
+
+			return null;
+		}
+	}
+	
+	
+	
+	public class getHistorial extends AsyncTask<String, String, String> {
+		protected String doInBackground(String... args) {
+
+			List<NameValuePair> params = new ArrayList<NameValuePair>();
+			params.add(new BasicNameValuePair("buscar", UserData.idCliente));
+			
+			JSONObject json = jParser.makeHttpRequest(url_all_getHistorial, "POST", params);
+
+			Log.d("All : Preferencias", json.toString());
+
+			try {
+				int success = json.getInt(UserData.TAG_SUCCESS);
+
+				if (success == 1) {
+					j2 = json.getJSONArray(UserData.TAG_reserva);
+					for (int i = 0; i < j2.length(); i++) {
+						map= new HashMap<String, Object>();
+						JSONObject c = j2.getJSONObject(i);
+
+						UserData.Cliente_historial = c.getString(UserData.TAG_CLIENTE_HISTORIAL);
+					//	UserData.Cliente_historial_2 = c.getString(UserData.TAG_CLIENTE_HISTORIAL_2);
+
+						map.put(UserData.TAG_CLIENTE_HISTORIAL, c.getString(UserData.TAG_CLIENTE_HISTORIAL));
+						//map.put(UserData.TAG_CLIENTE_HISTORIAL_2, c.getString(UserData.TAG_CLIENTE_HISTORIAL_2));
+						
+
+						// adding HashList to ArrayList
+						UserData.lista_historial.add(map);
+						System.out.println(UserData.lista_historial.toString());
 					}
 				} else {
 

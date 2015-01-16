@@ -18,5 +18,8 @@ if (!isset($_POST['Rest_email'])) {
               $asunto = "CLIENTE HA LLEGADO" ;
 
               mail($destino,$asunto,$mensaje,$remitente);
+                $response["success"] = 1;
+
+              echo json_encode($response);
             }
             ?>

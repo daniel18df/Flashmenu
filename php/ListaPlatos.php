@@ -1,6 +1,6 @@
 <?php
 $buscar=$_POST["buscar"];
-
+$preferencias_tipo=$_POST["preferencias_tipo"];
 /*
  * Following code will list all the products
  */
@@ -17,7 +17,7 @@ $db = new DB_CONNECT();
 $p = "platos";
 // get all products from products table
 //$result = mysql_query("SELECT *FROM platos WHERE Restaurant_idRestaurant = idRestaurant") or die(mysql_error());
-$result = mysql_query("SELECT * FROM Producto WHERE Restaurant_idRestaurant = '$buscar' AND Producto_tipo = '$p'") or die(mysql_error());
+$result = mysql_query("SELECT * FROM Producto WHERE Restaurant_idRestaurant = '$buscar' AND Producto_tipo = '$p' ORDER BY $preferencias_tipo DESC") or die(mysql_error());
 
 // check for empty result
 if (mysql_num_rows($result) > 0) {
@@ -28,6 +28,7 @@ if (mysql_num_rows($result) > 0) {
     while ($row = mysql_fetch_array($result)) {
         // temp user array
         $platos = array();
+        $platos["idProducto"] = $row["idProducto"];
         $platos["Producto_nombre"] = $row["Producto_nombre"];
         $platos["Producto_descripcion"] = $row["Producto_descripcion"];
         $platos["Producto_precio"] = $row["Producto_precio"];

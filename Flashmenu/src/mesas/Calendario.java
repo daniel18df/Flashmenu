@@ -81,31 +81,6 @@ public class Calendario  extends ListActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.lista2);
 
-//
-//		//RECIBIR DATOS POR INTENT
-//		Bundle extras = getIntent().getExtras();
-//		if (extras != null) {
-//
-//			idRest  = extras.getString("idRest");//
-//			usuario  = extras.getString("usuario");//
-//			mailRest  = extras.getString("mailRest");//
-//			direccionRest  = extras.getString("direccionRest");//
-//			idCliente = extras.getString("idCliente");
-//			Cliente_email = extras.getString("Cliente_email");
-//			precioPlato = extras.getString("precioPlato");
-//			nombrePlato  = extras.getString("nombrePlato");//
-//	
-//
-//		}else{
-//			idRest="error";
-//			usuario="error";
-//			mailRest="error";
-//			direccionRest="error";
-//			idCliente = "error";
-//			Cliente_email = "error";
-//		}///
-
-
 	//	Toast.makeText(getApplicationContext(), "id cli: "+idCliente, Toast.LENGTH_LONG).show();
 		new LoadAllplatos().execute();
 

@@ -18,13 +18,13 @@ $db = new DB_CONNECT();
 
 // get all products from products table
 //$result->mysql_set_charset('utf8');
-$result = mysql_query("SELECT * FROM Restaurant WHERE idRestaurant = '$buscar'") or die(mysql_error());
+$result = mysql_query("SELECT * FROM Restaurant WHERE Rest_nombre = '$buscar'") or die(mysql_error());
 // check for empty result
 if (mysql_num_rows($result) > 0) {
     // looping through all results
     // products node
    
-    $response["restaurant"] = array();
+    $response["Restaurant"] = array();
 
     while ($row = mysql_fetch_array($result)) {
         // temp user array
@@ -44,7 +44,7 @@ if (mysql_num_rows($result) > 0) {
 
 
         // push single product into final response array
-        array_push($response["restaurant"], $restaurantes);
+        array_push($response["Restaurant"], $restaurantes);
     }
     // success
     $response["success"] = 1;

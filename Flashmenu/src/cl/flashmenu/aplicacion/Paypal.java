@@ -39,6 +39,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import carta.listaPlatos2;
@@ -73,19 +74,30 @@ public class Paypal extends Activity {
 	//desde intent
 	//String idRest, usuario, mailRest, direccionRest, hora, fecha, idCliente, Cliente_email, mesa;
 	TextView perfil, cerrar , perfilUsuario;
+	
+	Integer id_producto, cantidad_producto;
+	String nombre_producto , cant;
 
 	TextView f, h, d, detallePro, totalPro;
-
-	String productos = "", to;
+	String productos = "", productos_2 = "", to;
 	DecimalFormat fmt;
 
 	int LastId;
+	
+	
+	String[] nombre_productos;
+	String[] tipo_productos;
+	int[]cantidad_productos;
+	int[]id_productos;
 
+	public HashMap<Integer, Integer> cantidades;
+	
 	JSONParser jsonParser = new JSONParser();
 
 
-	private static String url_create_Cliente = servidor.ip() + servidor.ruta2()+"nuevaReserva.php";
+	private static String url_create_reserva = servidor.ip() + servidor.ruta2()+"nuevaReserva.php";
 	private static String url_borrar_horario_mesa = servidor.ip() + servidor.ruta2()+"borrarHorarioMesa.php";
+	private static String url_create_producto_has_cliente = servidor.ip() + servidor.ruta2()+"nuevoProductoHasCliente.php";
 
 
 	int amount = 0;
@@ -94,6 +106,7 @@ public class Paypal extends Activity {
 
 
 	JSONParser jsonParser2 = new JSONParser();
+	JSONParser jsonParser3 = new JSONParser();
 
 	private static String url_email = servidor.ip() + servidor.ruta2()+"email.php";
 	private static final String TAG_SUCCESS = "success";
@@ -112,6 +125,7 @@ public class Paypal extends Activity {
 
 
 
+	@SuppressWarnings("unchecked")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -145,9 +159,6 @@ public class Paypal extends Activity {
 		fmt.setDecimalFormatSymbols(fmts);
 
 
-		//
-
-		
 
 		f = ((TextView) findViewById(R.id.detallefecha));
 		h = ((TextView) findViewById(R.id.detallehora));
@@ -163,37 +174,80 @@ public class Paypal extends Activity {
 		to = String.valueOf((UserData.PrecioPlatos()+UserData.PrecioBebidas()+UserData.PrecioPostres()+UserData.PrecioMenu()));
 
 
-
-
 		HashMap<String, Object> extract = (HashMap<String, Object>)UserData.lista.get(0);
+		HashMap<String, Object> extract2 = (HashMap<String, Object>)UserData.lista.get(0);
+
 		/*UserData.lista.remove(0);
 		//(String)extract.get(listaPlatos2.TAG_NOMBRE);
-
+		
 
 		while(!extract.isEmpty()){
 			productos += (String)extract.get(listaPlatos2.TAG_NOMBRE) + ": " + (String)extract.get(listaPlatos2.TAG_PRECIO) + "\n";
 			extract = (HashMap<String, Object>)UserData.lista.get(0);
 			UserData.lista.remove(0);
 		}*/
+		
+		cantidades = new HashMap<Integer, Integer>();
+		HashMap<Integer, String> nombres = new HashMap<Integer, String>();
+		
 		for(int i=0;i<UserData.lista.size();i++){
 			extract = (HashMap<String, Object>)UserData.lista.get(i);
 			productos += (String)extract.get(UserData.TAG_NOMBRE_PRODUCTO) + ": " + "$" + fmt.format(Integer.parseInt((String)extract.get(UserData.TAG_PRECIO_PRODUCTO))) + "\n";
+			productos_2 += (String)extract.get(UserData.TAG_NOMBRE_PRODUCTO) + "_";
+			id_producto = Integer.parseInt((String) extract.get(UserData.TAG_ID_PRODUCTO));
+			
+			if(cantidades.containsKey((id_producto))){
+				cantidades.put((id_producto),cantidades.get(id_producto) +1);
+			}
+			else{
+				cantidades.put((id_producto), 1);
+			}
+			
+			Log.d("array de cantidades: ", cantidades.toString());
+				
+				
 		}
-		UserData.lista.clear();
+		
+
+		
+		for(Map.Entry<Integer, Integer> entry : cantidades.entrySet()){
+			id_producto = entry.getKey();
+			cantidad_producto = entry.getValue();
+			Producto_has_cliente phc = new Producto_has_cliente();
+			phc.ip = id_producto;
+			phc.cp = cantidad_producto;
+			phc.execute();
+		}
+		
+//
+	//	String[] arrayProductos = productos_2.split("_");
+//		String[] arrayIdProductos = id_producto.split(" ");
+		
+//		for(int i=0;i<UserData.lista.size();i++){
+//			extract2 = (HashMap<String, Object>)UserData.lista.get(i);
+//			
+//			if(extract2.get(UserData.TAG_NOMBRE_PRODUCTO).toString().equals(arrayProductos[i]) == false){
+//				
+//			 id_producto = (String)extract2.get(UserData.TAG_ID_PRODUCTO);
+//			// nombre_producto  = (String)extract.get(UserData.TAG_NOMBRE_PRODUCTO);
+//			 //cantidad_producto = (String) extract2.get(UserData.TAG_CANTIDAD_PRODUCTO);
+//			 cantidad_producto++;
+//			 
+//			 
+//			 new Producto_has_cliente().execute();
+//			}
+//		}
+	
+		
+
+		
+		
+	//	UserData.lista.clear();
 		detallePro.setText(productos);
-
-
-
-
-		//
-
-		//		new CrearReserva().execute();
-		//
 
 		Intent intent = new Intent(this, PayPalService.class);
 		intent.putExtra(PayPalService.EXTRA_PAYPAL_CONFIGURATION, config);
 		startService(intent);
-
 
 	}
 
@@ -202,7 +256,8 @@ public class Paypal extends Activity {
 	class CrearReserva extends AsyncTask<String, String, String> {
 		
 		protected String doInBackground(String... args) {
-
+			
+			
 			List<NameValuePair> params = new ArrayList<NameValuePair>();
 
 			params.add(new BasicNameValuePair("Reserva_fecha", UserData.Horarios_mesa_fecha));
@@ -210,12 +265,13 @@ public class Paypal extends Activity {
 			params.add(new BasicNameValuePair("Reserva_total", to));
 			params.add(new BasicNameValuePair("Reserva_direccion", UserData.Rest_direccion));
 			params.add(new BasicNameValuePair("Reserva_detalleProductos", productos));
+			params.add(new BasicNameValuePair("Reserva_detalleProductos_2", productos_2));
 			params.add(new BasicNameValuePair("Reserva_email", UserData.Rest_email));
 			params.add(new BasicNameValuePair("Cliente_idCliente", UserData.idCliente));
 			params.add(new BasicNameValuePair("Mesa_Nro_mesa", UserData.Mesa_nro));
 
 
-			JSONObject json = jsonParser.makeHttpRequest(url_create_Cliente,"POST", params);
+			JSONObject json = jsonParser.makeHttpRequest(url_create_reserva,"POST", params);
 			Log.d("Create Response", json.toString());
 
 			try {
@@ -223,8 +279,11 @@ public class Paypal extends Activity {
 				LastId  = json.getInt(TAG_IDRESERVA);
 
 				if (success == 1) {
-
+					
+					
+					
 					new enviarMail().execute();
+					new eliminarHorario().execute();
 
 				} else {
 				}
@@ -236,7 +295,43 @@ public class Paypal extends Activity {
 		}
 	}
 
-	//
+	//System.out.println("");
+	
+	class Producto_has_cliente extends AsyncTask<String, String, String> {
+		
+		public int ip, cp;
+		
+		protected String doInBackground(String... args) {
+			
+			
+			List<NameValuePair> params = new ArrayList<NameValuePair>();
+
+			params.add(new BasicNameValuePair("Producto_idProducto", String.valueOf(ip)));
+			params.add(new BasicNameValuePair("Cliente_idCliente", UserData.idCliente));
+			params.add(new BasicNameValuePair("cantidad", String.valueOf(cp)));
+
+			Log.d("Producto_idProducto", String.valueOf(ip));
+			Log.d("CCliente_idCliente", UserData.idCliente);
+			Log.d("Ccantidad", String.valueOf(cp));
+			//params.add(new BasicNameValuePair("cantidad", Integer.toString(cantidad_producto)));
+
+
+			JSONObject json = jsonParser3.makeHttpRequest(url_create_producto_has_cliente,"POST", params);
+			Log.d("Create Response", json.toString());
+
+			try {
+				int success = json.getInt(TAG_SUCCESS);
+			
+				if (success == 1) {
+				} else {
+				}
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
+
+			return null;
+		}
+	}
 
 
 
@@ -441,7 +536,7 @@ public class Paypal extends Activity {
 								"PaymentConfirmation info received from PayPal", Toast.LENGTH_LONG)
 								.show();
 						new CrearReserva().execute();
-						new eliminarHorario().execute();
+//						new eliminarHorario().execute();
 						//						System.out.println("reservandoooooooooooooooooooooooooooooo");
 
 

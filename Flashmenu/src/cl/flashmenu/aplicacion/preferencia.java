@@ -121,6 +121,8 @@ public class preferencia extends ListActivity {
 
 			//	System.out.println("maaaapppp"+ User)
 					UserData.lista2.add(map);
+					
+				//	if(UserData.lista2.contains(object))
 			}
 
 		});
@@ -231,9 +233,9 @@ public class preferencia extends ListActivity {
 							horariosList.add(map);
 						}
 
-						adapters[0] = new SimpleAdapter(
+						adapters[0] = new CopyOfWeatherDataListAdapter(
 								preferencia.this, horariosList, R.layout.lista_itempreferencias,
-								new String[] { UserData.TAG_PREFERENCIAS_TIPO_VALOR }, new int[] {R.id.itempreferencia});
+								new String[] { UserData.TAG_PREFERENCIAS_TIPO_VALOR }, new int[] {R.id.itempreferencia}, "platos2");
 						((ListView)Linear[0].getChildAt(1)).setAdapter(adapters[0]);
 					//}
 				}
@@ -255,7 +257,7 @@ public class preferencia extends ListActivity {
 		protected void onPreExecute() {
 			super.onPreExecute();
 			pDialog = new ProgressDialog(preferencia.this);
-			pDialog.setMessage("Cargando platos. Please wait...");
+			pDialog.setMessage("Cargando preferencias. Please wait...");
 			pDialog.setIndeterminate(false);
 			pDialog.setCancelable(false);
 			pDialog.show();

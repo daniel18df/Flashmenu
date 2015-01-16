@@ -17,7 +17,8 @@ if (isset($_POST['Reserva_fecha']) && isset($_POST['Reserva_hora']) && isset($_P
     $Reserva_total = $_POST['Reserva_total'];
     $Reserva_direccion = $_POST['Reserva_direccion'];
     $Reserva_detalleProductos = $_POST['Reserva_detalleProductos'];
-    $Reserva_emailRest = $_POST['Reserva_emailRest'];
+    $Reserva_detalleProductos_2 = $_POST['Reserva_detalleProductos_2'];
+    $Reserva_email = $_POST['Reserva_email'];
     $Mesa_Nro_mesa = $_POST['Mesa_Nro_mesa'];
     $Cliente_idCliente = $_POST['Cliente_idCliente'];
 
@@ -39,21 +40,21 @@ if (isset($_POST['Reserva_fecha']) && isset($_POST['Reserva_hora']) && isset($_P
     //$db = new DB_CONNECT();
 //Reserva_fecha   Reserva_hora    Reserva_total   Reserva_direccion   Reserva_detalleProductos    Mesa_Nro_mesa   Cliente_idCliente
     // mysql inserting a new row
-    $result = mysqli_query($link, "INSERT INTO Reserva(Reserva_fecha, Reserva_hora, Reserva_total, Reserva_direccion, Reserva_detalleProductos, Reserva_emailRest, Mesa_Nro_mesa, Cliente_idCliente) VALUES('$Reserva_fecha' ,'$Reserva_hora','$Reserva_total','$Reserva_direccion','$Reserva_detalleProductos', '$Reserva_emailRest', '$Mesa_Nro_mesa', '$Cliente_idCliente')");
+    $result = mysqli_query($link, "INSERT INTO Reserva(Reserva_fecha, Reserva_hora, Reserva_total, Reserva_direccion, Reserva_detalleProductos, Reserva_detalleProductos_2, Reserva_email, Mesa_Nro_mesa, Cliente_idCliente) VALUES('$Reserva_fecha' ,'$Reserva_hora','$Reserva_total','$Reserva_direccion','$Reserva_detalleProductos','$Reserva_detalleProductos_2', '$Reserva_email', '$Mesa_Nro_mesa', '$Cliente_idCliente')");
     $idReserva = mysqli_insert_id($link);
     // check if row inserted or not
     if ($result) {
         // successfully inserted into database
         $response["success"] = 1;
         $response["LastId"] = $idReserva;
-        $response["message"] = "Reserva successfully created.";
+        $response["message"] = "Reserva  successfully created.";
 
         // echoing JSON response
         echo json_encode($response);
     } else {
         // failed to insert row
         $response["success"] = 0;
-        $response["message"] = "Oops! An error occurred.";
+        $response["message"] = "Oops! An error Reserva occurred.";
         
         // echoing JSON response
         echo json_encode($response);

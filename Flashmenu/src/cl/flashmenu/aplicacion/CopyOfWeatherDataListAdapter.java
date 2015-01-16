@@ -42,21 +42,18 @@ public class CopyOfWeatherDataListAdapter extends SimpleAdapter {
 		int cantidad=0;
 		view = super.getView(arg0, view, arg2);
 		for(int i = 0;i<comprarador.size();i++){
-		//	String comparer = (String)((HashMap<String,Object>)comprarador.get(i)).get(preferencia.TAG_PREFERENCIA_TIPO_VALOR);
+			String comparer = (String)((HashMap<String,Object>)comprarador.get(i)).get(UserData.TAG_PREFERENCIAS_TIPO_VALOR);
 			//String comparer2 = (String)((HashMap<String,Object>)comprarador.get(i)).get(listaBebidas.TAG_NOMBRE);
 			
-			//if(comparer != null && comparer.equals(((TextView)view.findViewById(R.id.itempreferencia)).getText().toString())){
-				if(cantidad == 0){
+			if(comparer != null && comparer.equals(((TextView)view.findViewById(R.id.itempreferencia)).getText().toString())){
+			
 					((TextView)view.findViewById(R.id.itempreferencia)).setTextColor(Color.BLACK);
-				}
-				cantidad++;
+					return view;
+			}
 			//}
 			
 			
-				((TextView)view.findViewById(R.id.cantidadPlatosSeleccionados)).setText(String.valueOf(cantidad));
-				if(cantidad>0){
-					return view;
-				}
+			
 		}
 		
 

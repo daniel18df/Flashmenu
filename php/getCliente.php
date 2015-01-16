@@ -23,7 +23,7 @@ $result = mysql_query("SELECT * FROM Cliente WHERE Cliente_email = '$buscar'") o
 if (mysql_num_rows($result) > 0) {
     // looping through all results
     // products node
-    $response["cliente"] = array();
+    $response["Cliente"] = array();
     
     while ($row = mysql_fetch_array($result)) {
         // temp user array
@@ -40,7 +40,7 @@ if (mysql_num_rows($result) > 0) {
 
 
         // push single product into final response array
-        array_push($response["cliente"], $Cliente);
+        array_push($response["Cliente"], $Cliente);
     }
     // success
     $response["success"] = 1;

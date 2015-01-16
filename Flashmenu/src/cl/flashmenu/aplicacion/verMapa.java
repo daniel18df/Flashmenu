@@ -75,7 +75,7 @@ GooglePlayServicesClient.OnConnectionFailedListener{
 
 	HashMap<String, Object> extract;
 	TextView perfilUsuario, perfil;
-	Button versugerencias;
+	Button versugerencias, versugerenciasmenu;
 	String usuario, idRest;
 
 
@@ -152,87 +152,6 @@ GooglePlayServicesClient.OnConnectionFailedListener{
 		new LoadAllplatos().execute();
 
 
-		//		mMap.addMarker(new MarkerOptions().position(new LatLng(-33.013779, -71.543099))
-		//				.title("sushihome").snippet("Vuelva a presionar el marker para mas informacion!"));
-		//
-		//		mMap.addMarker(new MarkerOptions().position(new LatLng(-33.013591, -71.542563))
-		//				.title("MAIA").snippet("Vuelva a presionar el marker para mas informacion!"));
-		//
-		//		mMap.addMarker(new MarkerOptions().position(new LatLng(-33.017302, -71.543780))
-		//				.title("Sanito").snippet("Vuelva a presionar el marker para mas informacion!"));
-		//
-		//		mMap.addMarker(new MarkerOptions().position(new LatLng(-33.012863, -71.548731))
-		//				.title("El rancho del cordobes").snippet("Vuelva a presionar el marker para mas informacion!"));
-
-		//		mMap.addMarker(new MarkerOptions().position(new LatLng(-33.012863, -71.548791))
-		//				.title("Unab").snippet("Vuelva a presionar el marker para mas informacion!"));
-
-
-
-//		mMap.setOnMarkerClickListener(new OnMarkerClickListener(){
-//
-//			@Override
-//			public boolean onMarkerClick(Marker arg0) {
-//
-//
-//
-//				//////////
-//				mMap.setOnMarkerClickListener(new OnMarkerClickListener(){
-//
-//					@Override
-//					public boolean onMarkerClick(Marker arg0) {
-//
-//						if(arg0.getTitle().equalsIgnoreCase("sushihome")){					
-//							Intent i = new Intent(getApplicationContext(), infoRestaurantes.class);
-//							UserData.idRestaurant = "6";
-//							startActivity(i);
-//						}
-//						else if(arg0.getTitle().equalsIgnoreCase("El rancho del cordobes")){
-//							Intent i = new Intent(getApplicationContext(), infoRestaurantes.class);
-//							UserData.idRestaurant = "7";
-//							i.putExtra("idRest", idRest);
-//							i.putExtra("usuario",UserData.Cliente_email);
-//							startActivity(i);
-//						}
-//						else if(arg0.getTitle().equalsIgnoreCase("MAIA")){
-//							Intent i = new Intent(getApplicationContext(), infoRestaurantes.class);
-//							UserData.idRestaurant= "8";
-//							i.putExtra("idRest", idRest);
-//							i.putExtra("usuario",UserData.Cliente_email);
-//							startActivity(i);
-//						}
-//						else if(arg0.getTitle().equalsIgnoreCase("Sanito")){
-//							Intent i = new Intent(getApplicationContext(), infoRestaurantes.class);
-//							UserData.idRestaurant = "9";
-//							i.putExtra("idRest", idRest);
-//							i.putExtra("usuario",UserData.Cliente_email);
-//							startActivity(i);
-//						}
-//						//						else if(arg0.getTitle().equalsIgnoreCase("unab")){
-//						//							Intent i = new Intent(getApplicationContext(), infoRestaurantes.class);
-//						//							idRest = "10";
-//						//							i.putExtra("idRest", idRest);
-//						//							i.putExtra("usuario",usuario);
-//						//							i.putExtra("idCliente",idCliente);
-//						//							i.putExtra("Cliente_email",Cliente_email);
-//						//							Toast.makeText(getApplicationContext(), idRest, Toast.LENGTH_LONG).show();
-//						//							startActivity(i);
-//						//						}
-//
-//
-//
-//
-//						return false;
-//					}
-//				});
-//
-//				//////////
-//
-//				return false;
-//			}
-//		});
-
-
 
 		versugerencias = (Button) findViewById(R.id.verSugerencia);
 		versugerencias.setOnClickListener(new View.OnClickListener() {
@@ -241,40 +160,24 @@ GooglePlayServicesClient.OnConnectionFailedListener{
 			public void onClick(View v) {
 
 				Intent i = new Intent(getApplicationContext(), verSugerencias.class);
-				i.putExtra("usuario",UserData.Cliente_email);
 				startActivity(i);
 
 				//finish();
 			}
 		});
+		
+		versugerenciasmenu = (Button) findViewById(R.id.verSugerenciamenu);
+		versugerenciasmenu.setOnClickListener(new View.OnClickListener() {
 
+			@Override
+			public void onClick(View v) {
 
-//		mMap.setOnMarkerClickListener(new OnMarkerClickListener(){
-//
-//			@Override
-//			public boolean onMarkerClick(Marker arg0) {
-//
-//				mMap.setOnMarkerClickListener(new OnMarkerClickListener(){
-//
-//					@Override
-//					public boolean onMarkerClick(Marker arg0) {
-//						if(arg0.getTitle().equalsIgnoreCase((String) extract.get(UserData.TAG_NOMBRE_REST))){	
-//							
-//							UserData.idRestaurant = (String) extract.get(UserData.TAG_ID_REST);
-//							Intent in = new Intent(getApplicationContext(), infoRestaurantes.class);
-//							startActivity(in);
-//						}			
-//						
-//						
-//						return false;
-//					}
-//				});
-//
-//				return false;
-//			}
-//		});
+				Intent i = new Intent(getApplicationContext(), verSugerenciasMenu.class);
+				startActivity(i);
 
-
+				//finish();
+			}
+		});
 
 	}
 	//oncreate

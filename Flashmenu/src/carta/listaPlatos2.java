@@ -62,9 +62,9 @@ public class listaPlatos2 extends ListActivity{
 	String usuario;
 
 
-	String idd, nombreP, descripcionP, precioP;
+	String idP, nombreP, descripcionP, precioP;
 
-	String n, d, p;
+	String id_producto, n, d, p, cant, tipo_producto;
 
 	TextView nn, dd, pp, totalEnCarta;
 
@@ -105,30 +105,13 @@ public class listaPlatos2 extends ListActivity{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.lista); 
 
-		//RECIBIR DATOS POR INTENT
-		Bundle extras = getIntent().getExtras();
-		if (extras != null) {
 
-//			idRest  = extras.getString("idRest");
-//			usuario  = extras.getString("usuario");
-//			mailRest  = extras.getString("mailRest");
-//			direccionRest  = extras.getString("direccionRest");
-//			idCliente = extras.getString("idCliente");
-
-		}else{
-//			idRest="error";
-//			usuario="error";
-//			mailRest="error";
-//			direccionRest="error";
-//			idCliente = "error";
-		}///
-		
 		DatosPorDefecto2();
 		String columna;
 		if(UserData.lista_preferencias_tipo.size() > 1){
 			columna = getColumnName((String)((HashMap<String, Object>)UserData.lista_preferencias_tipo.get(0)).get(UserData.TAG_PREFERENCIAS_TIPO_NOMBRE));
 			preferencias_tipo = columna + " = '" + ((HashMap<String, Object>)UserData.lista_preferencias_tipo.get(0)).get(UserData.TAG_PREFERENCIAS_TIPO_VALOR) + "'";
-			
+
 			for(int i = 1; i<UserData.lista_preferencias_tipo.size(); i++){
 				columna = getColumnName((String)((HashMap<String, Object>)UserData.lista_preferencias_tipo.get(i)).get(UserData.TAG_PREFERENCIAS_TIPO_NOMBRE));
 				preferencias_tipo += " OR " + columna + " = '" +((HashMap<String, Object>)UserData.lista_preferencias_tipo.get(i)).get(UserData.TAG_PREFERENCIAS_TIPO_VALOR) + "'";
@@ -162,8 +145,8 @@ public class listaPlatos2 extends ListActivity{
 
 
 
-	
-		
+
+
 
 
 		perfilTitulo = (TextView) findViewById(R.id.nombreClienteLISTA);
@@ -174,14 +157,12 @@ public class listaPlatos2 extends ListActivity{
 
 
 				Intent i = new Intent(getApplicationContext(), perfilCliente.class);
-//				i.putExtra("usuario",usuario);
-//				i.putExtra("idCliente",idCliente);
 				startActivity(i);
 
 				//finish();
 			}
 		});
-perfilTitulo.setText(UserData.Cliente_email);
+		perfilTitulo.setText(UserData.Cliente_email);
 
 		// Hashmap for ListView
 		PlatosList = new ArrayList<HashMap<String, Object>>();
@@ -203,32 +184,46 @@ perfilTitulo.setText(UserData.Cliente_email);
 				//nn = ((TextView) elemento.get(TAG_NOMBRE));
 				//dd = ((TextView) elemento.get(TAG_DESCRIPCION));
 				//pp = ((TextView) elemento.get(TAG_PRECIO));
-
+				int cantidad=0;
+				id_producto = (String)elemento.get(UserData.TAG_ID_PRODUCTO);
 				n = (String)elemento.get(UserData.TAG_NOMBRE_PRODUCTO);
 				d = (String)elemento.get(UserData.TAG_DESCRIPCION_PRODUCTO);
 				p = (String)elemento.get(UserData.TAG_PRECIO_PRODUCTO);
+				
+				tipo_producto = (String)elemento.get(UserData.TAG_TIPO_PRODUCTO);
+
+
+				cantidad = Integer.parseInt(((TextView)view.findViewById(R.id.cantidadPlatosSeleccionados)).getText().toString());
+		
+				cant= Integer.toString(cantidad);
+
+				// adding HashList to ArrayList
 
 				HashMap<String, Object> map = new HashMap<String, Object>();
+				map.put(UserData.TAG_ID_PRODUCTO, id_producto);
 				map.put(UserData.TAG_NOMBRE_PRODUCTO, n);
 				map.put(UserData.TAG_DESCRIPCION_PRODUCTO, d);
 				map.put(UserData.TAG_PRECIO_PRODUCTO, p);
 				map.put(UserData.TAG_POSITION_PRODUCTO, position);
 				map.put(UserData.TAG_TIPO, tipo);
-				// adding HashList to ArrayList
-				int cantidad = Integer.parseInt(((TextView)view.findViewById(R.id.cantidadPlatosSeleccionados)).getText().toString());
-
+				
+				
+				Toast.makeText(getApplicationContext(), "cant: "+cant, Toast.LENGTH_LONG).show();
+				
 				if(agregar){
+
+					cantidad++;
 					DatosPlatos.add(map);
 					UserData.lista.add(map);
-					cantidad++;
 					((TextView)view.findViewById(R.id.nombrePlato)).setTextColor(Color.BLACK);
 					((TextView)textView.findViewById(R.id.descripcionPlato)).setTextColor(Color.BLACK);
 					((TextView)textView.findViewById(R.id.precioPlato)).setTextColor(Color.BLACK);
 				}else{
 					if(cantidad>0){
+
+						cantidad--;	
 						DatosPlatos.remove(map);
 						UserData.lista.remove(map);
-						cantidad--;	
 					}
 					if(cantidad == 0){
 						((TextView)view.findViewById(R.id.nombrePlato)).setTextColor(Color.WHITE);
@@ -241,6 +236,7 @@ perfilTitulo.setText(UserData.Cliente_email);
 
 
 				totalEnCarta.setText("$" + fmt.format(UserData.Precio(tipo)));
+
 			}
 		});
 
@@ -248,7 +244,7 @@ perfilTitulo.setText(UserData.Cliente_email);
 
 	}
 
-    private String getColumnName(String name){
+	private String getColumnName(String name){
 		String columna = "Nada";
 		if(name.equals("Comidas")){
 			columna = "Producto_tipo_preferencia";
@@ -257,8 +253,8 @@ perfilTitulo.setText(UserData.Cliente_email);
 			columna = "Producto_precio";
 		}
 		return columna;
-    	
-    }
+
+	}
 	private void DatosPorDefecto2() {
 		spinner2 = (Spinner) findViewById(R.id.spinnerCarta2);
 		lista2 = new ArrayList<String>();
@@ -348,7 +344,7 @@ perfilTitulo.setText(UserData.Cliente_email);
 					for (int i = 0; i < platosl.length(); i++) {
 						JSONObject c = platosl.getJSONObject(i);
 
-
+						idP = c.getString(UserData.TAG_ID_PRODUCTO);
 						nombreP = c.getString(UserData.TAG_NOMBRE_PRODUCTO);
 						descripcionP = c.getString(UserData.TAG_DESCRIPCION_PRODUCTO);
 						precioP = c.getString(UserData.TAG_PRECIO_PRODUCTO);
@@ -357,7 +353,7 @@ perfilTitulo.setText(UserData.Cliente_email);
 						// creating new HashMap
 						HashMap<String, Object> map = new HashMap<String, Object>();
 
-
+						map.put(UserData.TAG_ID_PRODUCTO, idP);
 						map.put(UserData.TAG_NOMBRE_PRODUCTO, nombreP);
 						map.put(UserData.TAG_DESCRIPCION_PRODUCTO, descripcionP);
 						map.put(UserData.TAG_PRECIO_PRODUCTO, precioP);

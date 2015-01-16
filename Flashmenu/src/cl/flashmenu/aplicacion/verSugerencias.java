@@ -133,14 +133,14 @@ public class verSugerencias extends ListActivity{
 				n = (String)elemento.get(UserData.TAG_NOMBRE_PRODUCTO);
 				d = (String)elemento.get(UserData.TAG_DESCRIPCION_PRODUCTO);
 				p = (String)elemento.get(UserData.TAG_PRECIO_PRODUCTO);
-				UserData.idRestaurant = (String)elemento.get(UserData.TAG_ID_PRODUCTO);
+				UserData.idRestaurant = (String)elemento.get(UserData.TAG_ID_PRODUCTO_REST);
 				new getRest().execute();
 
 				HashMap<String, Object> map = new HashMap<String, Object>();
 				map.put(UserData.TAG_NOMBRE_PRODUCTO, n);
 				map.put(UserData.TAG_DESCRIPCION_PRODUCTO, d);
 				map.put(UserData.TAG_PRECIO_PRODUCTO, p);
-				map.put(UserData.TAG_ID_PRODUCTO, UserData.idRestaurant);
+				map.put(UserData.TAG_ID_PRODUCTO_REST, UserData.idRestaurant);
 				map.put(UserData.TAG_POSITION_PRODUCTO, position);
 
 
@@ -228,7 +228,7 @@ public class verSugerencias extends ListActivity{
 						UserData.SProducto_precio = c.getString(UserData.TAG_PRECIO_PRODUCTO);
 						UserData.SProducto_tipo	= c.getString(UserData.TAG_TIPO_PRODUCTO);
 						UserData.SProducto_tipo_preferencia= c.getString(UserData.TAG_TIPO_PREFERENCIAS_PRODUCTO);
-						UserData.sRestaurant_idRestaurant = c.getString(UserData.TAG_ID_PRODUCTO);
+						UserData.sRestaurant_idRestaurant = c.getString(UserData.TAG_ID_PRODUCTO_REST);
 
 
 						// creating new HashMap
@@ -240,7 +240,7 @@ public class verSugerencias extends ListActivity{
 						map.put(UserData.TAG_PRECIO_PRODUCTO, UserData.SProducto_precio);
 						map.put(UserData.TAG_TIPO_PRODUCTO, UserData.SProducto_tipo) ;
 						map.put(UserData.TAG_TIPO_PREFERENCIAS_PRODUCTO, UserData.SProducto_tipo_preferencia);
-						map.put(UserData.TAG_ID_PRODUCTO, UserData.sRestaurant_idRestaurant);
+						map.put(UserData.TAG_ID_PRODUCTO_REST, UserData.sRestaurant_idRestaurant);
 						
 
 						// adding HashList to ArrayList

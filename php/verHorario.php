@@ -48,7 +48,7 @@ $result = mysql_query("SELECT *FROM Horarios_mesa, Mesa WHERE Restaurant_idResta
 if (mysql_num_rows($result) > 0) {
     // looping through all results
     // products node
-    $response["horarios_mesa"] = array();
+    $response["Horarios_mesa"] = array();
     
     while ($row = mysql_fetch_array($result)) {
         // temp user array
@@ -63,7 +63,7 @@ if (mysql_num_rows($result) > 0) {
 
 
         // push single product into final response array
-        array_push($response["horarios_mesa"], $horarios_mesa);
+        array_push($response["Horarios_mesa"], $horarios_mesa);
     }
     // success
     $response["success"] = 1;

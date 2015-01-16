@@ -34,7 +34,7 @@ if (mysql_num_rows($result) > 0) {
         $reserva["Reserva_total"] = $row["Reserva_total"];
         $reserva["Reserva_direccion"] = $row["Reserva_direccion"];
         $reserva["Reserva_detalleProductos"] = $row["Reserva_detalleProductos"];
-        $reserva["Reserva_emailRest"] = $row["Reserva_emailRest"];
+        $reserva["Reserva_email"] = $row["Reserva_email"];
         $reserva["Mesa_Nro_mesa"] = $row["Mesa_Nro_mesa"];
         $reserva["Cliente_idCliente"] = $row["Cliente_idCliente"];
         //$product["created_at"] = $row["created_at"];

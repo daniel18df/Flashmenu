@@ -478,7 +478,7 @@ containing a value of this type.
         public static final int TextView01=0x7f070062;
         public static final int TextView02=0x7f070078;
         public static final int TextView03=0x7f070072;
-        public static final int action_settings=0x7f07009d;
+        public static final int action_settings=0x7f07009e;
         public static final int bInicioCli=0x7f070019;
         public static final int bebidas=0x7f070084;
         public static final int book_now=0x7f070010;
@@ -582,7 +582,7 @@ containing a value of this type.
         public static final int relativeLayout3=0x7f070088;
         public static final int relativeLayout4=0x7f070025;
         public static final int rutC=0x7f07001d;
-        public static final int salir=0x7f07009c;
+        public static final int salir=0x7f07009d;
         public static final int sandbox=0x7f070008;
         public static final int satellite=0x7f070002;
         public static final int scrollView1=0x7f07005b;
@@ -623,7 +623,8 @@ containing a value of this type.
         public static final int tr=0x7f07002b;
         public static final int tuerca=0x7f070017;
         public static final int verReservas=0x7f07005d;
-        public static final int verSugerencia=0x7f07009b;
+        public static final int verSugerencia=0x7f07009c;
+        public static final int verSugerenciamenu=0x7f07009b;
         public static final int view1=0x7f070089;
         public static final int volverMapa=0x7f070060;
         public static final int wrap_content=0x7f07000d;
@@ -639,21 +640,22 @@ containing a value of this type.
         public static final int iniciosesioncliente=0x7f030004;
         public static final int list_itemplatos=0x7f030005;
         public static final int list_itemsugerencias=0x7f030006;
-        public static final int lista=0x7f030007;
-        public static final int lista2=0x7f030008;
-        public static final int lista_itemcalendario=0x7f030009;
-        public static final int lista_itemhorarios=0x7f03000a;
-        public static final int lista_itemmesas=0x7f03000b;
-        public static final int lista_itempreferencias=0x7f03000c;
-        public static final int lista_itemreserva=0x7f03000d;
-        public static final int modificarcliente=0x7f03000e;
-        public static final int paypal=0x7f03000f;
-        public static final int perfilcliente=0x7f030010;
-        public static final int perfilreserva=0x7f030011;
-        public static final int preferencia=0x7f030012;
-        public static final int productos=0x7f030013;
-        public static final int vermapa=0x7f030014;
-        public static final int verreserva=0x7f030015;
+        public static final int list_itemsugerenciasmenu=0x7f030007;
+        public static final int lista=0x7f030008;
+        public static final int lista2=0x7f030009;
+        public static final int lista_itemcalendario=0x7f03000a;
+        public static final int lista_itemhorarios=0x7f03000b;
+        public static final int lista_itemmesas=0x7f03000c;
+        public static final int lista_itempreferencias=0x7f03000d;
+        public static final int lista_itemreserva=0x7f03000e;
+        public static final int modificarcliente=0x7f03000f;
+        public static final int paypal=0x7f030010;
+        public static final int perfilcliente=0x7f030011;
+        public static final int perfilreserva=0x7f030012;
+        public static final int preferencia=0x7f030013;
+        public static final int productos=0x7f030014;
+        public static final int vermapa=0x7f030015;
+        public static final int verreserva=0x7f030016;
     }
     public static final class menu {
         public static final int ini=0x7f0a0000;

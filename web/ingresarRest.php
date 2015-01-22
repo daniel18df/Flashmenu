@@ -13,8 +13,10 @@ if(isset($_POST['submit'])){
     $tipo = $_POST['tipo'];
     $descripcion = $_POST['descripcion'];
     $email = $_POST['email'];
-    $direccion = $_POST['direccion'];
-  $query = "INSERT INTO Restaurant (Rest_nombre, Rest_tipo, Rest_descripcion, Rest_email, Rest_direccion, Administrador_restaurant_idAdministrador_restaurant) VALUES ('$nombre', '$tipo', '$descripcion', '$email', '$direccion', '$var1')";
+    $direccion = $_POST['address'];
+    $lat = $_POST['lat'];
+    $long = $_POST['long'];
+  $query = "INSERT INTO Restaurant (Rest_nombre, Rest_tipo, Rest_descripcion, Rest_email, Rest_direccion, Rest_lat, Rest_long, Administrador_restaurant_idAdministrador_restaurant) VALUES ('$nombre', '$tipo', '$descripcion', '$email', '$direccion', '$lat', '$long', '$var1')";
      if (!mysql_query($query))
          {
      
@@ -53,6 +55,37 @@ if(isset($_POST['submit'])){
     <!--[if lt IE 9]>
    		<script type="text/javascript" src="js/html5.js"></script>
 	<![endif]-->
+    <script src="http://maps.google.com/maps/api/js?sensor=false" type="text/javascript"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <link href="css/bootstrap.min.css" rel="stylesheet" type="text/css" title="Normal" />
+    <script src="js/map.class.min.js" type="text/javascript"></script> 
+    
+<script type="text/javascript"> 
+
+
+
+var map; var geocoder; var errMSG; var fldAddr; var fldLng; var fldLat; var mapCntr; var geocoder; 
+function initialize() { mapDIV = document.getElementById("map"); fldAddr = document.getElementById("address"); errMSG = document.getElementById("err"); fldLng = document.getElementById("long"); fldLat = document.getElementById("lat"); geocoder = new google.maps.Geocoder(); var latlng = new google.maps.LatLng(-33.024527, -71.55234000000002); var myOptions = { zoom: 10, center: latlng, mapTypeId: google.maps.MapTypeId.ROADMAP }; mapDIV.innerHTML = ""; map = new google.maps.Map(mapDIV, myOptions); } 
+
+function marcarDireccion() { 
+    fldAddr.value = fldAddr.value.trim(); 
+    if (fldAddr.value) { 
+        fldLat.value = ""; fldLng.value = ""; geocoder.geocode({'address': fldAddr.value}, 
+
+            function(results, status) { 
+                if (status == google.maps.GeocoderStatus.OK) { 
+                    errMSG.innerHTML = ""; map.setCenter(results[0].geometry.location); 
+                    fldLat.value = results[0].geometry.location.lat(); 
+                    fldLng.value = results[0].geometry.location.lng(); 
+                    var txt = fldAddr.value = results[0].formatted_address; 
+                    if (txt) { var calleCiudad = txt.split(',', 2); 
+                    txt = calleCiudad[0].trim() + "\n" + calleCiudad[1].trim() + "\n"; } 
+                    txt += "lat: " + fldLat.value + "\nlng: " + fldLng.value + "\n"; 
+                    new google.maps.Marker({ 
+                        position: new google.maps.LatLng(results[0].geometry.location.lat(), results[0].geometry.location.lng()), map: map }); map.setZoom(15); } 
+                    else { errMSG.innerHTML = "Error " + status; } }); } } 
+google.maps.event.addDomListener(window, 'load', initialize); 
+</script> 
 
 
     <!--ESTILO FORM-->
@@ -164,7 +197,7 @@ if(isset($_POST['submit'])){
         <div class="row-bot">
         	<div class="row-bot-bg">
             	<div class="main">
-                	<h2>Ingresar <span>productos a la carta</span></h2>
+                	<h2>Ingresar <span>restaurant</span></h2>
                 </div>
             </div>
         </div>
@@ -207,17 +240,27 @@ if(isset($_POST['submit'])){
                              </label>
                              <br/><br/>
 
+                            <label>
                               <!--precio plato-->
-                             <label>
-                             <span>Direccion:</span>
-                             <input type="text" name="direccion" maxlength="16" />
-                             </label>
-                             <br/><br/>
+                    <div>         <div style="margin-bottom: 10px;"> 
+                            <span>Direccion:</span>
+                            <input type="text" name="address" id="address" style="width:300px;" onchange="marcarDireccion()"> 
+                            <p class="button-2"> Ver direccion</p>
+       
+                            </div> 
+                        </label>
 
-                         
+                            <div style="height: 400px; width: 500px;" id="map"></div> 
+
+
+                <span id="err" style="color:red"></span> 
+                    <input type="text" name="lat" id="lat" style="width:150px;">
+                    <input type="text" name="long" id="long" style="width:150px;"> 
+
+                       </div>  
                                  
 
-      <input class="button-2" onclick="alert('Plato creado exitosamente!')" type="submit" name="submit" value="Ingresar" formmethod="post" />
+      <input class="button-2" onclick="alert('Restaurant creado exitosamente!')" type="submit" name="submit" value="Ingresar" formmethod="post" />
                       
                             </center>
                     </form>

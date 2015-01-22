@@ -1,9 +1,11 @@
+
 <?php $var1=$_GET['var1'];
-        $perfilAdm=$_GET['perfilAdm'];?> 
+$perfilAdm=$_GET['perfilAdm'];?> 
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <title>Menús</title>
+    <title>Menus</title>
     <meta charset="utf-8">
     <link rel="stylesheet" href="css/reset.css" type="text/css" media="screen">
     <link rel="stylesheet" href="css/style.css" type="text/css" media="screen">
@@ -13,16 +15,6 @@
     <script src="js/cufon-replace.js" type="text/javascript"></script> 
     <script src="js/Dynalight_400.font.js" type="text/javascript"></script>
     <script src="js/FF-cash.js" type="text/javascript"></script>  
-	<!--[if lt IE 8]>
-    <div style=' clear: both; text-align:center; position: relative;'>
-        <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode">
-        	<img src="http://storage.ie6countdown.com/assets/100/images/banners/warning_bar_0000_us.jpg" border="0" height="42" width="820" alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today." />
-        </a>
-    </div>
-	<![endif]-->
-    <!--[if lt IE 9]>
-   		<script type="text/javascript" src="js/html5.js"></script>
-	<![endif]-->
 
       <style>
 table {
@@ -69,7 +61,7 @@ table#t01 th    {
         <div class="row-bot">
         	<div class="row-bot-bg">
             	<div class="main">
-                	<h2>Menús <span>Restaurant</span></h2>
+                	<h2>Menus <span>Restaurant</span></h2>
                 </div>
             </div>
         </div>
@@ -83,63 +75,50 @@ table#t01 th    {
               
 <?php
 
-/*
- * Following code will list all the products
- */
-//$v1=$_GET['var'];
-// include db connect class
 require_once __DIR__ . '/db_connect.php';
-
 // connecting to db
 $db = new DB_CONNECT();
+
 ?>
+
 <?php 
-
-
 ////////reserva
-$result = mysql_query("SELECT *FROM Menu WHERE Restaurant_idRestaurant = $var1") or die(mysql_error());
+$result = mysql_query("SELECT idMenu, Menu_nombre, Producto_nombre, Menu_precio FROM Menu a, Producto b, Producto_has_Menu c, Restaurant d  WHERE a.idmenu = c.Menu_idMenu AND b.idProducto = c.Producto_idProducto AND d.idrestaurant = b.Restaurant_idRestaurant") or die(mysql_error());
 
 if (mysql_num_rows($result) > 0) {
 
-echo "<table id='t01' border = '2' color = white bgcolor = '#C5C5C5'> \n"; 
-echo "<tr><td>Nombre</td><td>Descripcion</td><td>Precio</td></tr> \n"; 
+    echo "<table id='t01' border = '2' color = white bgcolor = '#C5C5C5'> \n"; 
+    echo "<tr><td>Nombre</td><td>Descripcion</td><td>Precio</td></tr> \n"; 
    
-    while ($row = mysql_fetch_array($result)) {
+        while ($row = mysql_fetch_array($result)) {
        
-        $idMenu = $row["idMenu"];
-        $Menu_nombre = $row['Menu_nombre'];
-        $Menu_descripcion = $row["Menu_descripcion"];
-        $Menu_precio = $row["Menu_precio"];
-        $Restaurant_idRestaurant = $row["Restaurant_idRestaurant"];
+            $idMenu = $row["idMenu"];
+            $Menu_nombre = $row['Menu_nombre'];
+            $Menu_descripcion = $row["Producto_nombre"];
+            $Menu_precio = $row["Menu_precio"];
+            $Restaurant_idRestaurant = $row["Restaurant_idRestaurant"];
 
-
- echo "<tr><td><a href='perfilMenuCarta.php?idMenu=$row[0]&perfilAdm=$perfilAdm&var1=$var1'>$row[1]</a></td><td>$row[2]</td><td>$row[3]</td></tr> \n"; 
-
+        echo "<tr><td><a href='perfilMenuCarta.php?idMenu=$row[0]&perfilAdm=$perfilAdm&var1=$var1'>$row[1]</a></td><td>$row[2]</td><td>$row[3]</td></tr> \n"; 
  
-    }
+        }
 
-
-
-echo "</table> \n"; 
-/////////reseeva
-
+    echo "</table> \n"; 
+    /////////reserva
 } 
 else {
     echo "No hay menús";
 }
+
 ?>
 
 
-
 <!-- JS  -->
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.5.1/jquery.js"></script>
-    <script>window.jQuery || document.write("<script src='js/jquery-1.5.1.min.js'>\x3C/script>")</script>
-    <script src="js/app.js"></script>
-
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.5.1/jquery.js"></script>
+<script>window.jQuery || document.write("<script src='js/jquery-1.5.1.min.js'>\x3C/script>")</script>
+<script src="js/app.js"></script>
 
 </body>
 </html>
-
 
             </div>
         </div>

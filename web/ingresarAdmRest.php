@@ -1,7 +1,5 @@
 <?php
 
-$idAdministrador_restaurant=$_GET['idAdministrador_restaurant'];
-
 if(isset($_POST['submit'])){
   // include db connect class
     require_once __DIR__ . '/db_connect.php';
@@ -13,28 +11,27 @@ if(isset($_POST['submit'])){
     $rut = $_POST['rut'];
     $email = $_POST['email'];
     $contrasena = $_POST['contrasena'];
-  $result = "UPDATE Administrador_restaurant SET Adm_nombre = '$nombre', Adm_apellidoPaterno = '$apeP', Adm_apellidoMaterno = '$apeM', Adm_rut = '$rut', Adm_email = '$email', Adm_direccion = '$contrasena' WHERE idAdministrador_restaurant = '$idAdministrador_restaurant'";
-      mysql_query($result);
+  $query = "INSERT INTO Administrador_restaurant (Adm_nombre, Adm_apellidoPaterno, Adm_apellidoMaterno, Adm_rut, Adm_email, Adm_direccion) VALUES ('$nombre', '$apeP', '$apeM', '$rut', '$email', '$contrasena')";
+ 
 ?>
 
-
- <meta http-equiv="REFRESH" content="0;url=http://localhost:8888/web/perfilAdm.php?var1=$idAdministrador_restaurant">
+ <meta http-equiv="REFRESH" content="0;url=http://localhost:8888/web/loginAdmRest.php">
  
          <?php  
-     if (!mysql_query($result))
+     if (!mysql_query($query))
          {
      
-         die('Error: ' . mysql_error());
+         die('Error: ' . mysql_error());    
          //echo "Error al crear el plato." . "<br />";
          }
          else{
-         echo "<br />" . "<h2>" . "Producto Creado Exitosamente!" . "</h2>";
-         echo "<h4>" . "Nombre Producto: " . $_POST['nombre'] . "</h4>";
+         //echo "<br />" . "<h2>" . "Producto Creado Exitosamente!" . "</h2>";
+         //echo "<h4>" . "Nombre Producto: " . $_POST['nombre'] . "</h4>";
          }
          //}
-         mysql_close($conexion);
-     }
-        ?>
+    mysql_close($conexion);
+}
+?>
 
 <!DOCTYPE html>
 <html lang="es">
@@ -49,16 +46,7 @@ if(isset($_POST['submit'])){
     <script src="js/cufon-replace.js" type="text/javascript"></script> 
     <script src="js/Dynalight_400.font.js" type="text/javascript"></script>
     <script src="js/FF-cash.js" type="text/javascript"></script>  
-	<!--[if lt IE 8]>
-    <div style=' clear: both; text-align:center; position: relative;'>
-        <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode">
-        	<img src="http://storage.ie6countdown.com/assets/100/images/banners/warning_bar_0000_us.jpg" border="0" height="42" width="820" alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today." />
-        </a>
-    </div>
-	<![endif]-->
-    <!--[if lt IE 9]>
-   		<script type="text/javascript" src="js/html5.js"></script>
-	<![endif]-->
+
 
 
     <!--ESTILO FORM-->
@@ -180,46 +168,46 @@ if(isset($_POST['submit'])){
         <div class="main">
             <div class="wrapper">
             	 
-                   <form class="basic-grey" action="modificarAdm.php?idAdministrador_restaurant=$idAdministrador_restaurant">
+                   <form class="basic-grey" action="ingresarAdmRest.php">
                     <h3 class="p1">Ingresar datos</h3>
                         <center>
                             <hr/>
-                            <!--Nombre plato-->
+                            <!--Nombre administrador-->
                              <label>
                              <span>Nombre:</span>
                              <input type="text" name="nombre" maxlength="30" />
                              </label>
                             <br/><br/>
 
-                             <!--descripcion plato--> 
+                             <!--Apellido paterno administrador--> 
                              <label>
                              <span>Apellido Paterno:</span>
                              <input type="text" name="apeP" maxlength="30" />
                              </label>
                              <br/><br/>
 
-                            <!--precio plato-->
+                            <!--Apellido materno administrador-->
                              <label>
                              <span>Apellido Materno:</span>
                              <input type="text" name="apeM" maxlength="30" />
                              </label>
                              <br/><br/>
 
-                                 <!--Nombre plato-->
+                                 <!--Rut administrador-->
                              <label>
                              <span>Rut:</span>
                              <input type="number" name="rut" maxlength="9" />
                              </label>
                             <br/><br/>
 
-                             <!--descripcion plato--> 
+                             <!--Email administrador--> 
                              <label>
                              <span>Email:</span>
                              <input type="email" name="email" maxlength="30" />
                              </label>
                              <br/><br/>
 
-                            <!--precio plato-->
+                            <!--password ingreso administrador-->
                              <label>
                              <span>Password:</span>
                              <input type="password" name="contrasena" maxlength="16" />
@@ -228,7 +216,7 @@ if(isset($_POST['submit'])){
 
 
                                  
-<input class="button-2" onclick="alert('modificado exitosamente!')" type="submit" name="submit" value="Ingresar" formmethod="post" />
+<input class="button-2" onclick="alert('Creado exitosamente!')" type="submit" name="submit" value="Ingresar" formmethod="post" />
                       
                             </center>
                     </form>

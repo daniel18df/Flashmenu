@@ -18,7 +18,7 @@ $perfilAdm=$_GET['perfilAdm'];
          echo "Error al borrar el plato." . "<br />";
          }
          else{
-         echo "<html><head><meta http-equiv='REFRESH' content='0;url=http://www.flashmenu.cl/web/verMenus.php?var1=$var1&perfilAdm=$perfilAdm'></head></html>";
+         echo "<html><head><meta http-equiv='REFRESH' content='0;url=http://localhost:8888/web/verMenus.php?var1=$var1&perfilAdm=$perfilAdm'></head></html>";
          }
          //}
          mysql_close($conexion);

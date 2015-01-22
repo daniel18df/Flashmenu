@@ -133,7 +133,7 @@
                     <nav>
                         <ul class="menu">
                            <!-- <li><a href="index.html">Home</a></li>-->
-                            <li><a class="active" href="login.php">Ingresar</a></li>
+                            <li><a class="active" href="loginAdmRest.php">Ingresar</a></li>
                             <li><a href="contact.php">Contacto</a></li>
                         </ul>
                     </nav>
@@ -143,7 +143,7 @@
         <div class="row-bot">
         	<div class="row-bot-bg">
             	<div class="main">
-                	<h2>Inicio sesion <span>Administrador</span></h2>
+                	<h2>Inicio sesion <span>Administrador restaurant</span></h2>
                 </div>
             </div>
         </div>
@@ -154,17 +154,9 @@
        <div class="main">
             <div class="wrapper">
     
-                    <form class="basic-grey" id="contact-form" method="post" enctype="multipart/form-data" action="login.php">                    
+                    <form class="basic-grey" id="contact-form" method="post" enctype="multipart/form-data" action="loginAdmRest.php">                    
                       <h3 class="p1">Ingresar datos</h3>
                         <fieldset>
-
-                            
-                        <select name="tipo">
-                            <optgroup>
-                                <option value="Admin rest">Administrador rest</option>
-                                <option value="Admin sist">Admin sist</option>
-                        </select>    
-
                               <label><span class="text-form">Email:</span><input name="username" type="email" id="username"></label>
                                <br/><br/>
                               <label><span class="text-form">Contraseña:</span><input name="password" type="password" id = "password"/></label>                              
@@ -177,106 +169,73 @@
                                       
                                         <a class="button-2" href="#" onClick="document.getElementById('contact-form').submit()" type ="submit" name="submit2">Enviar</a>
                                         <a class="button-2" href="ingresarAdmRest.php" onClick="document.getElementById('contact-form').submit()" type ="submit" >Registrar</a>
-        
+                                   
                                     </div> 
                                 </div>
                               </div>                            
                         </fieldset>  
 
-  <?php   //echo $POST['Admin rest'];
+  
+     
+    <?php
+      /* start the session */
+    //session_start();
+     
+     // include db connect class
+    if (!isset($_POST['submit2'])) {
+require_once __DIR__ . '/db_connect.php';
 
-if (!isset($_POST['submit2'])) {
-
-    require_once __DIR__ . '/db_connect.php';
-
-    $db = new DB_CONNECT();
+// connecting to db
+$db = new DB_CONNECT();
      
     // sent from form
     $username = $_POST['username'];
     $password = $_POST['password'];
-
-    if(strcmp($_POST['tipo'], "Admin rest") ==0){
-         
-        $sql= ("SELECT * FROM Administrador_restaurant WHERE Adm_email = '$username' and Adm_direccion='$password'") or die(mysql_error());
-         
-        $result=mysql_query($sql);
-         
-        // counting table row
-        $count = mysql_num_rows($result);
-        // If result matched $username and $password
-        while ($row = mysql_fetch_array($result)) {
-           
-            $idAdministrador_restaurant = $row["idAdministrador_restaurant"];
-            $Adm_nombre = $row["Adm_nombre"];
-            $Adm_email = $row["Adm_email"];
-            $Adm_direccion = $row["Adm_direccion"];
-            $Adm_apellidoPaterno = $row["Adm_apellidoPaterno"];
-            $Adm_apellidoMaterno = $row["Adm_apellidoMaterno"];
-            $Adm_rut = $row["Adm_rut"];
-        }
-
-         
-        if($count == 1){
-         
-             $_SESSION['loggedin'] = true;
-             $_SESSION['username'] = $username;
-             $_SESSION['start'] = time();
-             $_SESSION['expire'] = $_SESSION['start'] + (5 * 60) ;
-         
-?>
-
-<!-- -->
-
-    <meta http-equiv="REFRESH" content="0;url=http://localhost:8888/web/perfilAdm.php?var1=<?php echo "$idAdministrador_restaurant"?><?php echo "&admnombre=$Adm_nombre"?>">
-    
- <?php
-        }
-    }
-   
-    if(strcmp($_POST['tipo'], "Admin sist") ==0){
-
      
-    $sql2= ("SELECT * FROM Administrador_sistema WHERE Adm_user = '$username' and Adm_pass ='$password'") or die(mysql_error());
+    $sql= ("SELECT * FROM Administrador_restaurant WHERE Adm_email = '$username' and Adm_direccion='$password'") or die(mysql_error());
      
-    $result2=mysql_query($sql2);
+    $result=mysql_query($sql);
      
     // counting table row
-    $count = mysql_num_rows($result2);
+    $count = mysql_num_rows($result);
     // If result matched $username and $password
-    while ($row = mysql_fetch_array($result2)) {
+    while ($row = mysql_fetch_array($result)) {
        
-        $Adm_user = $row["Adm_user"];
-        $Adm_pass = $row["Adm_pass"];
+        $idAdministrador_restaurant = $row["idAdministrador_restaurant"];
+        $Adm_nombre = $row["Adm_nombre"];
+        $Adm_email = $row["Adm_email"];
+        $Adm_direccion = $row["Adm_direccion"];
+        $Adm_apellidoPaterno = $row["Adm_apellidoPaterno"];
+        $Adm_apellidoMaterno = $row["Adm_apellidoMaterno"];
+        $Adm_rut = $row["Adm_rut"];
     }
 
      
     if($count == 1){
-         
-         $_SESSION['loggedin'] = true;
-         $_SESSION['username'] = $username;
-         $_SESSION['start'] = time();
-         $_SESSION['expire'] = $_SESSION['start'] + (5 * 60) ;
      
-?>
+     $_SESSION['loggedin'] = true;
+     $_SESSION['username'] = $username;
+     $_SESSION['start'] = time();
+     $_SESSION['expire'] = $_SESSION['start'] + (5 * 60) ;
+     
+    //echo "<br> Bienvenido! " . $_SESSION['username'];
+    ?>
+
 <!-- -->
-    <meta http-equiv="REFRESH" content="0;url=http://localhost:8888/web/perfilAdmSist.php">
-    
-<?php
+
+    <meta http-equiv="REFRESH" content="0;url=http://localhost:8888/web/perfilAdm.php?var1=<?php echo "$idAdministrador_restaurant"?><?php echo "&admnombre=$Adm_nombre"?>">
+    <!--    <center><a href="perfil2.php?var1=Adm_nombre"><button>Perfil</button></a></center>-->
+
+     <?php
     }
      else {
    //  echo "<br/>Username o Password estan incorrectos.<br>";
+     
     // echo "<a href='login.php'>Volver a Intentarlo</a>";
-        }
     }
 }
-    
      
-?>
-<!--//////////////////////////////////// -->
-
-
-     
-
+    ?>
 
                     </form>
 

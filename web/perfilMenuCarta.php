@@ -1,6 +1,8 @@
-<?php $var1=$_GET['var1'];
-      $idMenu=$_GET['idMenu'];
-      $perfilAdm=$_GET['perfilAdm'];?> 
+<?php 
+$var1=$_GET['var1'];
+$idMenu=$_GET['idMenu'];
+$perfilAdm=$_GET['perfilAdm'];?>
+ 
 <!DOCTYPE html>
 <html lang="es">
 <head>

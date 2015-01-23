@@ -50,15 +50,56 @@ background-color: #0DC03D;
 margin-top:-2px;
 padding-bottom:12px;
 }
-
 </style>
+
+<style>
+    table {
+        width: 900px;
+    }
+    td {
+        padding: 5px;
+        text-align: left;
+        border: 1px solid black;
+        border-collapse: separate;
+    }
+    tr#tt01{
+        color: green;
+    }
+
+    table#t01 tr:nth-child(even) {
+        background-color: #eee;
+    }
+    table#t01 tr:nth-child(odd) {
+       background-color:#fff;
+    }
+    table#t01 th    {
+        background-color: black;
+        color: white;
+    }
+    td#c01{
+        width: 50px;
+    }
+    td#c02{
+        width: 50px;
+    }
+    td#c03{
+        width: 30px;
+    }
+    td#c04{
+        width: 80px;
+    }
+    td#c05{
+        width: 60px;
+    }
+</style>
+
 </head>
 
 
-
 <body id="page3">
-	<!--==============================header=================================-->
+<!--==============================header=================================-->
     <header>
+        <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
     	<div class="row-top">
         	<div class="main">
             	<div class="wrapper">
@@ -77,7 +118,7 @@ padding-bottom:12px;
         <div class="row-bot">
         	<div class="row-bot-bg">
             	<div class="main">
-                	<h2>Reporte de recomendador <span><?php echo "$admnombre" ?></span></h2>
+                	<h2>Estadisticas de recomendación <span></span></h2>
                 </div>
             </div>
         </div>
@@ -90,9 +131,6 @@ padding-bottom:12px;
             	<h3 class="prev-indent-bot"></h3>
                
 <?php
-/*
- * Following code will list all the products
- */
 
 // include db connect class
 require_once __DIR__ . '/db_connect.php';
@@ -100,25 +138,64 @@ require_once __DIR__ . '/db_connect.php';
 // connecting to db
 $db = new DB_CONNECT();
 
- ?>
-
-<?php 
 ////////Muestra recomendación
-$result = mysql_query("SELECT DISTINCT Producto_nombre, Reserva_detalleProductos_2, Rest_nombre, Cliente_nombre, Reserva_fecha, cantidad 
-FROM Producto a, Reserva b, Producto_has_Cliente c, Cliente d, Restaurant e 
-WHERE a.idProducto = c.Producto_idProducto AND d.idCliente = c.Cliente_idCliente AND e.idRestaurant = a.Restaurant_idRestaurant
-ORDER BY cantidad DESC 
-LIMIT 3;") or die(mysql_error());
+
+?>
+<h3 align="left"><font color= "#000000" > Top 3 mas comprados</font></h3>
+<?php
+$result = mysql_query("SELECT DISTINCT Producto_nombre, Recomendaciones_detalle, Rest_nombre, Reserva_fecha 
+    FROM Producto a, Reserva b, Producto_has_Cliente c, Cliente d, Restaurant e, Recomendaciones f 
+    WHERE a.idProducto = c.Producto_idProducto AND e.idRestaurant = a.Restaurant_idRestaurant AND f.Recomendaciones_detalle = a.Producto_nombre
+    GROUP BY cantidad
+    ORDER BY cantidad DESC 
+    LIMIT 0,3") or die(mysql_error());
 
 if (mysql_num_rows($result) > 0) {
 
-    echo "<table id='t01' border = '2' color = white bgcolor = '#c5c5c5'> \n"; 
-    echo "<tr><td>Nombre Producto</td><td>Detalle de compra</td><td>Restaurant</td><td>Cliente</td><td>Fecha</td></tr> \n"; 
+    echo "<table id='t01'> \n"; 
+    echo "<tr id='tt01'><td id=c01>Recomendación</td><td id=c02>Detalle de compra</td><td id=c03>Restaurant</td><td id=c05>Fecha</td></tr> \n"; 
    
         while ($row = mysql_fetch_array($result)) {
        
             $Producto_nombre = $row["Producto_nombre"];
-            $Reserva_detalleProductos_2 = $row['Reserva_detalleProductos_2'];
+            $Recomendaciones_detalle = $row['Recomendaciones_detalle'];
+            $Rest_nombre = $row["Rest_nombre"];
+            $Cliente_nombre = $row["Cliente_nombre"];
+            $Reserva_fecha = $row["Reserva_fecha"];
+
+        echo "<tr><td>$row[0]</td><td>$row[1]</td><td>$row[2]</td><td>$row[3]</td><td>$row[4]</td></tr> \n"; 
+ 
+        }
+
+    echo "</table> \n"; 
+    /////////reserva
+} 
+else {
+    echo "No hay menús";
+}
+
+?>
+
+</br>
+
+<h3><font color= "#000000" > Top 3 menos comprados</font></h3>
+<?php
+$result = mysql_query("SELECT DISTINCT Producto_nombre, Recomendaciones_detalle, Rest_nombre, Reserva_fecha 
+    FROM Producto a, Reserva b, Producto_has_Cliente c, Cliente d, Restaurant e, Recomendaciones f 
+    WHERE a.idProducto = c.Producto_idProducto AND e.idRestaurant = a.Restaurant_idRestaurant AND f.Recomendaciones_detalle = a.Producto_nombre
+    GROUP BY cantidad
+    ORDER BY cantidad ASC 
+    LIMIT 0,3") or die(mysql_error());
+
+if (mysql_num_rows($result) > 0) {
+
+    echo "<table id='t01'> \n"; 
+    echo "<tr id='tt01'><td id=c01>Recomendación</td><td id=c02>Detalle de compra</td><td id=c03>Restaurant</td><td id=c05>Fecha</td></tr> \n"; 
+   
+        while ($row = mysql_fetch_array($result)) {
+       
+            $Producto_nombre = $row["Producto_nombre"];
+            $Recomendaciones_detalle = $row['Recomendaciones_detalle'];
             $Rest_nombre = $row["Rest_nombre"];
             $Cliente_nombre = $row["Cliente_nombre"];
             $Reserva_fecha = $row["Reserva_fecha"];
@@ -140,8 +217,6 @@ else {
    
 <!-- -->
 
-<?php
-?>
             </div>
         </div>
     </section>

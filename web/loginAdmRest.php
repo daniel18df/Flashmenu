@@ -177,16 +177,15 @@
 
   
      
-    <?php
-      /* start the session */
-    //session_start();
+<?php
+    /* start the session */
      
      // include db connect class
-    if (!isset($_POST['submit2'])) {
-require_once __DIR__ . '/db_connect.php';
+if (!isset($_POST['submit2'])) {
+    require_once __DIR__ . '/db_connect.php';
 
-// connecting to db
-$db = new DB_CONNECT();
+    // connecting to db
+    $db = new DB_CONNECT();
      
     // sent from form
     $username = $_POST['username'];
@@ -224,12 +223,11 @@ $db = new DB_CONNECT();
 <!-- -->
 
     <meta http-equiv="REFRESH" content="0;url=http://localhost:8888/web/perfilAdm.php?var1=<?php echo "$idAdministrador_restaurant"?><?php echo "&admnombre=$Adm_nombre"?>">
-    <!--    <center><a href="perfil2.php?var1=Adm_nombre"><button>Perfil</button></a></center>-->
 
      <?php
     }
      else {
-   //  echo "<br/>Username o Password estan incorrectos.<br>";
+   echo "<br/>Username o Password estan incorrectos.<br>";
      
     // echo "<a href='login.php'>Volver a Intentarlo</a>";
     }

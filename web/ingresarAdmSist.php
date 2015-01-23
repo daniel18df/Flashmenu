@@ -13,6 +13,7 @@ if(isset($_POST['submit'])){
     $rut = $_POST['rut'];
     $email = $_POST['email'];
     $contrasena = $_POST['contrasena'];
+    
   $query = "INSERT INTO Administrador_restaurant (Adm_nombre, Adm_apellidoPaterno, Adm_apellidoMaterno, Adm_rut, Adm_email, Adm_direccion) VALUES ('$nombre', '$apeP', '$apeM', '$rut', '$email', '$contrasena')";
  
 ?>

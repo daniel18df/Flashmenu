@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
     <title>Reporte</title>
-    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <link rel="stylesheet" href="css/reset.css" type="text/css" media="screen">
     <link rel="stylesheet" href="css/style.css" type="text/css" media="screen">
     <link rel="stylesheet" href="css/layout.css" type="text/css" media="screen"> 
@@ -29,32 +29,75 @@
 	</script>
 
 <style>
-#button {
-padding: 0;
-}
-#button li {
-display: inline;
-}
-#button li a {
-font-family: Arial;
-font-size:20px;
-text-decoration: none;
-float:left;
-padding: 10px;
-background-color: #0DC03D;
-color: #fff;
-}
+    #button {
+    padding: 0;
+    }
+    #button li {
+    display: inline;
+    }
+    #button li a {
+    font-family: Arial;
+    font-size:20px;
+    text-decoration: none;
+    float:left;
+    padding: 10px;
+    background-color: #0DC03D;
+    color: #fff;
+    }
 
-#button li a:hover {
-background-color: #0DC03D;
-margin-top:-2px;
-padding-bottom:12px;
-}
+    #button li a:hover {
+    background-color: #0DC03D;
+    margin-top:-2px;
+    padding-bottom:12px;
+    }
 
 </style>
+
+
+<style>
+    table {
+        width: 1000px;
+    }
+    td {
+        padding: 5px;
+        text-align: left;
+        border: 1px solid black;
+        border-collapse: separate;
+    }
+    tr#tt01{
+        color: green;
+    }
+
+    table#t01 tr:nth-child(even) {
+        background-color: #eee;
+    }
+    table#t01 tr:nth-child(odd) {
+       background-color:#fff;
+    }
+    table#t01 th    {
+        background-color: black;
+        color: white;
+    }
+    td#c01{
+        width: 50px;
+    }
+    td#c02{
+        width: 190px;
+    }
+    td#c03{
+        width: 10px;
+    }
+    td#c04{
+        width: 100px;
+    }
+    td#c05{
+        width: 60px;
+    }
+</style>
+
+
+
 </head>
-
-
 
 <body id="page3">
 	<!--==============================header=================================-->
@@ -82,17 +125,25 @@ padding-bottom:12px;
             </div>
         </div>
     </header>
-    
+
 <!--==============================content================================-->
     <section id="content"><div class="ic"></div>
         <div class="main">
             <div class="container">
             	<h3 class="prev-indent-bot"></h3>
-               
+
+<!-- Para imprimir reporte -->
+<body>
+
+<input class="button-2" type="button" name="imprimir" value="Imprimir reporte"  onClick="window.print();"/>
+
+</br>
+</br>
+
+<hr>
+</body>
+
 <?php
-/*
- * Following code will list all the products
- */
 
 // include db connect class
 require_once __DIR__ . '/db_connect.php';
@@ -103,20 +154,24 @@ $db = new DB_CONNECT();
  ?>
 
 <?php 
-////////Muestra recomendación
-$result = mysql_query("SELECT DISTINCT Producto_nombre, Reserva_detalleProductos_2, Rest_nombre, Cliente_nombre, Reserva_fecha FROM Producto a, Reserva b, Producto_has_Cliente c, Cliente d, Restaurant e WHERE a.idProducto = c.Producto_idProducto AND d.idCliente = c.Cliente_idCliente AND e.idRestaurant = a.Restaurant_idRestaurant") or die(mysql_error());
+////////Muestra reporte de recomendación vs compras del cliente
+$result = mysql_query("SELECT DISTINCT Cliente_nombre, Producto_nombre, Reserva_detalleProductos_2, Rest_nombre, Reserva_fecha 
+    FROM Producto a, Reserva b, Producto_has_Cliente c, Cliente d, Restaurant e 
+    WHERE a.idProducto = c.Producto_idProducto AND d.idCliente = c.Cliente_idCliente AND e.idRestaurant = a.Restaurant_idRestaurant 
+    ORDER BY Cliente_nombre") or die(mysql_error());
 
 if (mysql_num_rows($result) > 0) {
 
-    echo "<table id='t01' border = '2' color = white bgcolor = '#c5c5c5'> \n"; 
-    echo "<tr><td>Nombre Producto</td><td>Detalle de compra</td><td>Restaurant</td><td>Cliente</td><td>Fecha</td></tr> \n"; 
+    echo "<table id='t01'> \n"; 
+
+    echo "<tr id='tt01'><td id='c01'>Cliente</td><td id='c02'>Recomendación</td><td id='c03'>Detalle de compra</td><td id='c04'>Restaurant</td><td id='c05'>Fecha</td></tr> \n"; 
    
         while ($row = mysql_fetch_array($result)) {
        
+            $Cliente_nombre = $row["Cliente_nombre"];
             $Producto_nombre = $row["Producto_nombre"];
             $Reserva_detalleProductos_2 = $row['Reserva_detalleProductos_2'];
             $Rest_nombre = $row["Rest_nombre"];
-            $Cliente_nombre = $row["Cliente_nombre"];
             $Reserva_fecha = $row["Reserva_fecha"];
 
         echo "<tr><td>$row[0]</td><td>$row[1]</td><td>$row[2]</td><td>$row[3]</td><td>$row[4]</td></tr> \n"; 
@@ -124,7 +179,7 @@ if (mysql_num_rows($result) > 0) {
         }
 
     echo "</table> \n"; 
-    /////////reserva
+    
 } 
 else {
     echo "No hay menús";
@@ -132,12 +187,6 @@ else {
 
 ?>
 
-</br>
-   
-<!-- -->
-
-<?php
-?>
             </div>
         </div>
     </section>

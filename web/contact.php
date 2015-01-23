@@ -42,7 +42,7 @@
         <div class="row-bot">
         	<div class="row-bot-bg">
             	<div class="main">
-                	<h2>Si eres dueño <span>de un restaurant, contactanos</span></h2>
+                	<h2>Si eres dueno de un restaurant, <span>contactanos</span></h2>
                 </div>
             </div>
         </div>
@@ -61,7 +61,8 @@
                         <dl>
                             <dt class="p1">Viña del mar, Chile</dt>
                             <dd><span>Telefono:</span>  +569 56629103 - +569 89068681</dd>
-                            <dd><span>Email:</span><a class="color-2" href="#">daniel18.df@gmail.com - octavio.valencia.v@gmail.com</a></dd>
+                            <dd><span>Email 1:</span><a class="color-2" href="#">daniel18.df@gmail.com</a></dd>
+                            <dd><span>Email 2:</span><a class="color-2" href="#">octavio.valencia.v@gmail.com</a></dd>
                         </dl>
                     </div>
                 </article>

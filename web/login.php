@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang = 'esp'>
 <head>
     <title>Login</title>
-    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <link rel="stylesheet" href="css/reset.css" type="text/css" media="screen">
     <link rel="stylesheet" href="css/style.css" type="text/css" media="screen">
     <link rel="stylesheet" href="css/layout.css" type="text/css" media="screen"> 
@@ -23,16 +23,6 @@
 			});
 		}); 
 	</script>
-	<!--[if lt IE 8]>
-    <div style=' clear: both; text-align:center; position: relative;'>
-        <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode">
-        	<img src="http://storage.ie6countdown.com/assets/100/images/banners/warning_bar_0000_us.jpg" border="0" height="42" width="820" alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today." />
-        </a>
-    </div>
-	<![endif]-->
-    <!--[if lt IE 9]>
-   		<script type="text/javascript" src="js/html5.js"></script>
-	<![endif]-->
 
      <!--ESTILO FORM-->
     <style type="text/css">
@@ -161,13 +151,14 @@
                             
                         <select name="tipo">
                             <optgroup>
-                                <option value="Admin rest">Administrador rest</option>
-                                <option value="Admin sist">Admin sist</option>
+                                <option value="Admin rest">Administrador Restaurant</option>
+                                <option value="Admin sist">Administrador sistema</option>
                         </select>    
 
                               <label><span class="text-form">Email:</span><input name="username" type="email" id="username"></label>
                                <br/><br/>
-                              <label><span class="text-form">Contraseña:</span><input name="password" type="password" id = "password"/></label>                              
+                              <label><span class="text-form">Contraseña:</span><input name="password" type="password" id ="password"/></label>  
+                              <br/>                            
                               <div class="wrapper">
                                
                                 <div class="extra-wrap">
@@ -184,6 +175,7 @@
                         </fieldset>  
 
   <?php   //echo $POST['Admin rest'];
+echo "<a href='login.php'</a>";
 
 if (!isset($_POST['submit2'])) {
 
@@ -203,7 +195,7 @@ if (!isset($_POST['submit2'])) {
          
         // counting table row
         $count = mysql_num_rows($result);
-        // If result matched $username and $password
+        // Si es correcto el $username y $password
         while ($row = mysql_fetch_array($result)) {
            
             $idAdministrador_restaurant = $row["idAdministrador_restaurant"];
@@ -221,17 +213,25 @@ if (!isset($_POST['submit2'])) {
              $_SESSION['loggedin'] = true;
              $_SESSION['username'] = $username;
              $_SESSION['start'] = time();
-             $_SESSION['expire'] = $_SESSION['start'] + (5 * 60) ;
-         
+             $_SESSION['expire'] = $_SESSION['start'] + (5 * 60) ;        
 ?>
-
 <!-- -->
 
     <meta http-equiv="REFRESH" content="0;url=http://localhost:8888/web/perfilAdm.php?var1=<?php echo "$idAdministrador_restaurant"?><?php echo "&admnombre=$Adm_nombre"?>">
     
  <?php
         }
+        else {
+?>
+
+        <script>
+        alert('Username o Password estan incorrectos. Vuelva a intentarlo');
+        </script>
+
+<?php
+        }
     }
+
    
     if(strcmp($_POST['tipo'], "Admin sist") ==0){
 
@@ -249,7 +249,6 @@ if (!isset($_POST['submit2'])) {
         $Adm_pass = $row["Adm_pass"];
     }
 
-     
     if($count == 1){
          
          $_SESSION['loggedin'] = true;
@@ -264,8 +263,11 @@ if (!isset($_POST['submit2'])) {
 <?php
     }
      else {
-   //  echo "<br/>Username o Password estan incorrectos.<br>";
-    // echo "<a href='login.php'>Volver a Intentarlo</a>";
+?>
+        <script language='javascript' type="text/javascript">
+        alert('Username o Password estan incorrectos. Vuelva a intentarlo');
+        </script>
+<?php
         }
     }
 }
@@ -273,10 +275,6 @@ if (!isset($_POST['submit2'])) {
      
 ?>
 <!--//////////////////////////////////// -->
-
-
-     
-
 
                     </form>
 

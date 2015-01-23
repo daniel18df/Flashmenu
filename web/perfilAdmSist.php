@@ -102,7 +102,7 @@ $db = new DB_CONNECT();
 </br>
    
 <a href='reporte.php' class="button-2" onClick="document.getElementById('contact-form').submit()" >Reporte</a>
-<a href='modificarAdm.php <?php echo "$idAdministrador_restaurant"?>' class="button-2" onClick="document.getElementById('contact-form').submit()" >Estadistica</a>
+<a href='Estadistica.php' class="button-2" onClick="document.getElementById('contact-form').submit()" >Estadistica</a>
  
 <!-- -->
 
